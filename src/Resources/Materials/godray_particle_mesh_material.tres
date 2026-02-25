@@ -1,0 +1,35 @@
+[gd_resource type="ShaderMaterial" load_steps=6 format=3 uid="uid://cykxbt4edyh56"]
+
+[ext_resource type="Shader" uid="uid://dr02juj2fsg4i" path="res://DEMO/Level/godray-3d.gdshader" id="1_ym0k7"]
+
+[sub_resource type="Gradient" id="Gradient_bm256"]
+offsets = PackedFloat32Array(0, 0.44907, 0.492386, 0.590863, 1)
+colors = PackedColorArray(0.5, 0.5, 0.5, 0, 1, 1, 1, 0.768627, 1, 1, 1, 1, 1, 1, 1, 0.810199, 0.5, 0.5, 0.5, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1egu4"]
+gradient = SubResource("Gradient_bm256")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_huhte"]
+noise_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mo48d"]
+width = 256
+height = 256
+seamless_blend_skirt = 0.0
+noise = SubResource("FastNoiseLite_huhte")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ym0k7")
+shader_parameter/base_angle = 0.0
+shader_parameter/rotation_x = 0.0
+shader_parameter/rotation_y = 0.0
+shader_parameter/rotation_z = 0.0
+shader_parameter/alpha = 0.45
+shader_parameter/rim_power = 0.5
+shader_parameter/texture_emission = SubResource("NoiseTexture2D_mo48d")
+shader_parameter/gradient = SubResource("GradientTexture1D_1egu4")
+shader_parameter/emission = Color(0.878431, 0.709804, 0, 1)
+shader_parameter/emission_energy = 0.1
+shader_parameter/uv1_scale = Vector3(5, 0, 0)
+shader_parameter/uv1_offset = Vector3(0, 1, 0)

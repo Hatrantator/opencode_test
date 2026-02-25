@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://cctlbwpelaasy"]
+
+[ext_resource type="Texture2D" uid="uid://eli10gi7bkkc" path="res://addons/gd_shader_lib/assets/hdri/812-hdri-skies-com.hdr" id="1_s37jj"]
+[ext_resource type="Shader" uid="uid://jsjcept63tnd" path="res://addons/gd_shader_lib/shaders/examples/example.gdshader" id="2_li7c4"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_li7c4"]
+panorama = ExtResource("1_s37jj")
+
+[sub_resource type="Sky" id="Sky_h5org"]
+sky_material = SubResource("PanoramaSkyMaterial_li7c4")
+
+[sub_resource type="Environment" id="Environment_14ang"]
+background_mode = 2
+sky = SubResource("Sky_h5org")
+
+[sub_resource type="SphereMesh" id="SphereMesh_h5org"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h5org"]
+render_priority = 0
+shader = ExtResource("2_li7c4")
+shader_parameter/gdslColor = Color(0, 0, 0, 1)
+shader_parameter/gdslColorStrength = 1.0
+shader_parameter/fresnelAmount = 4.000000285
+shader_parameter/fresnelStrength = 0.5
+shader_parameter/fresnelBlend = 1.0
+shader_parameter/fresnelColor = Color(0, 0.6508211, 0.9623737, 1)
+shader_parameter/gdslQuadOffsetScale = 0.01
+
+[node name="ShaderWizardScene" type="Node3D" unique_id=691919024]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=190995415]
+environment = SubResource("Environment_14ang")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=542069745]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1374581227]
+mesh = SubResource("SphereMesh_h5org")
+surface_material_override/0 = SubResource("ShaderMaterial_h5org")

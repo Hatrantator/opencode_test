@@ -1,0 +1,37 @@
+[gd_resource type="ShaderMaterial" load_steps=6 format=3 uid="uid://hyp6umivqy36"]
+
+[ext_resource type="Shader" uid="uid://dr02juj2fsg4i" path="res://DEMO/Level/godray-3d.gdshader" id="1_30uy1"]
+
+[sub_resource type="Gradient" id="Gradient_rvfnv"]
+interpolation_mode = 1
+colors = PackedColorArray(1, 1, 1, 0.635294, 0.5, 0.5, 0.5, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_qcbei"]
+gradient = SubResource("Gradient_rvfnv")
+
+[sub_resource type="Gradient" id="Gradient_30uy1"]
+offsets = PackedFloat32Array(0.146814, 0.391813, 0.542936, 0.680312, 0.908587)
+colors = PackedColorArray(0, 0, 0, 1, 0.290739, 0.290739, 0.290739, 1, 0.470076, 0.470076, 0.470076, 1, 0.293467, 0.293467, 0.293467, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rvfnv"]
+gradient = SubResource("Gradient_30uy1")
+width = 512
+height = 512
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_30uy1")
+shader_parameter/smoothed_wind_direction = Vector2(0, 0)
+shader_parameter/smoothed_wind_speed = 0.0
+shader_parameter/height_offset = 0.0
+shader_parameter/rotation_x = 0.0
+shader_parameter/rotation_y = 1.71e-05
+shader_parameter/rotation_z = -45.0
+shader_parameter/alpha = 0.5
+shader_parameter/rim_power = 0.7
+shader_parameter/texture_emission = SubResource("GradientTexture2D_rvfnv")
+shader_parameter/gradient = SubResource("GradientTexture1D_qcbei")
+shader_parameter/emission = Color(1, 1, 0.521569, 1)
+shader_parameter/emission_energy = 0.7
+shader_parameter/uv1_scale = Vector3(1, 0, 0)
+shader_parameter/uv1_offset = Vector3(0, 1, 0)

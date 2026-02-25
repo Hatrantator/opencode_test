@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://2k6xcwfwykt7"]
+
+[node name="DynamicTextureViewport" type="Node" unique_id=2039873637]
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1053133020]
+transparent_bg = true
+
+[node name="ColorRect" type="ColorRect" parent="SubViewport" unique_id=216749957]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5019608, 0.5019608, 1, 1)
+metadata/_edit_use_anchors_ = true

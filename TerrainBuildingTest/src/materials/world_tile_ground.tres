@@ -1,0 +1,30 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://b0puwuspvx6j8"]
+
+[ext_resource type="Shader" uid="uid://dgi06euyslr8p" path="res://addons/gd_shader_lib/shaders/examples/ground_flat.gdshader" id="1_750bn"]
+
+[sub_resource type="Gradient" id="Gradient_kjmcv"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_gmo8u"]
+noise_type = 2
+frequency = 0.0422
+fractal_type = 0
+cellular_return_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_saade"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_gmo8u")
+color_ramp = SubResource("Gradient_kjmcv")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_750bn")
+shader_parameter/hueMaskTexture = SubResource("NoiseTexture2D_saade")
+shader_parameter/hueMaskScale = 64.0
+shader_parameter/tex_x = SubResource("NoiseTexture2D_saade")
+shader_parameter/tex_z = SubResource("NoiseTexture2D_saade")
+shader_parameter/flat_color = Color(0.19607843, 0.35686275, 0.09411765, 1)
+shader_parameter/steep_color = Color(0.3726681, 0.21457446, 0.11075907, 1)
+shader_parameter/slope_start = 0.8
+shader_parameter/slope_end = 0.95
+shader_parameter/texture_scale = 0.1

@@ -1,0 +1,61 @@
+[gd_scene load_steps=11 format=3 uid="uid://ddygajlkvmblk"]
+
+[ext_resource type="Script" uid="uid://btd65br56bjtb" path="res://src/World/WorldGen/PlaneGen/world_gen_sorted.gd" id="1_mflap"]
+[ext_resource type="Script" uid="uid://bddnsb2trx4u8" path="res://src/World/WorldGen/PlaneGen/world.gd" id="2_ivodg"]
+[ext_resource type="Script" uid="uid://crb42j80xc163" path="res://src/World/WorldGen/PlaneGen/ground_meshes.gd" id="3_edahp"]
+[ext_resource type="Script" uid="uid://wley58ut0wnj" path="res://src/World/WorldGen/PlaneGen/water_meshes.gd" id="4_2xqax"]
+[ext_resource type="Script" uid="uid://dc8jk0k7uavf7" path="res://src/World/WorldGen/PlaneGen/world_objects.gd" id="5_77st1"]
+[ext_resource type="Script" uid="uid://b737rbhg6xuq2" path="res://src/World/WorldGen/PlaneGen/multi_meshes.gd" id="5_edahp"]
+[ext_resource type="Script" uid="uid://dpkptl151ffxv" path="res://src/World/WorldGen/PlaneGen/navigation.gd" id="6_6ngtv"]
+[ext_resource type="Script" uid="uid://hkqypdvqt8d8" path="res://src/World/WorldGen/PlaneGen/np_cs.gd" id="7_g68k6"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ivodg"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_edahp"]
+width = 1024
+height = 1024
+noise = SubResource("FastNoiseLite_ivodg")
+
+[node name="WorldGen" type="Node3D"]
+script = ExtResource("1_mflap")
+debug = true
+
+[node name="Viewports" type="Node" parent="."]
+
+[node name="GroundMask" type="SubViewport" parent="Viewports"]
+size = Vector2i(1024, 1024)
+
+[node name="TextureRect" type="TextureRect" parent="Viewports/GroundMask"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("NoiseTexture2D_edahp")
+
+[node name="WorldSystems" type="Node3D" parent="."]
+
+[node name="World" type="StaticBody3D" parent="."]
+script = ExtResource("2_ivodg")
+
+[node name="GroundMeshes" type="Node3D" parent="."]
+script = ExtResource("3_edahp")
+
+[node name="WaterMeshes" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("4_2xqax")
+
+[node name="MultiMeshes" type="Node3D" parent="."]
+script = ExtResource("5_edahp")
+
+[node name="WorldObjects" type="Node3D" parent="."]
+script = ExtResource("5_77st1")
+
+[node name="Static" type="Node3D" parent="WorldObjects"]
+
+[node name="Physics" type="Node3D" parent="WorldObjects"]
+
+[node name="Interactive" type="Node3D" parent="WorldObjects"]
+
+[node name="Navigation" type="Node3D" parent="."]
+script = ExtResource("6_6ngtv")
+
+[node name="NPCs" type="Node3D" parent="."]
+script = ExtResource("7_g68k6")

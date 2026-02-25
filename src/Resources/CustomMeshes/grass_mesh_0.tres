@@ -1,0 +1,43 @@
+[gd_resource type="QuadMesh" load_steps=4 format=3 uid="uid://dhtgbqkkd2t1v"]
+
+[ext_resource type="Shader" uid="uid://utwunq07f6gf" path="res://src/Resources/Shader/gridmap_ground.gdshader" id="1_jhl1d"]
+[ext_resource type="Texture2D" uid="uid://cufjbw82f1c3l" path="res://Assets/2D/Foliage-Flat/sprite_0001.png" id="2_f160m"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jwrv2"]
+render_priority = 0
+shader = ExtResource("1_jhl1d")
+shader_parameter/smoothed_wind_direction = Vector2(0, 0)
+shader_parameter/smoothed_wind_speed = 0.0
+shader_parameter/use_greyscale = true
+shader_parameter/secondary_albedo = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/tertiary_albedo = Color(0.5, 1, 0.5, 1)
+shader_parameter/quarternary_albedo = Color(0.5, 0.5, 1, 1)
+shader_parameter/albedo = Color(0.47451, 0.827451, 0.466667, 1)
+shader_parameter/use_albedo_mask = false
+shader_parameter/use_albedo_texture = false
+shader_parameter/albedo_texture_1 = ExtResource("2_f160m")
+shader_parameter/use_normal = false
+shader_parameter/alpha_scissor = 0.99
+shader_parameter/backlight_color = Color(1, 1, 1, 1)
+shader_parameter/backlight_amount = 0.0
+shader_parameter/use_billboard = true
+shader_parameter/wind_sway = true
+shader_parameter/use_multimesh = false
+shader_parameter/clamp_diffuse_to_max = false
+shader_parameter/use_attenuation = true
+shader_parameter/cuts = 3
+shader_parameter/wrap = 0.17
+shader_parameter/steepness = 3.0
+shader_parameter/use_specular = false
+shader_parameter/specular_strength = 1.0
+shader_parameter/specular_shininess = 16.0
+shader_parameter/use_rim = false
+shader_parameter/rim_width = 8.0
+shader_parameter/rim_color = Color(1, 1, 1, 1)
+shader_parameter/use_ramp = false
+shader_parameter/use_borders = false
+shader_parameter/border_width = 0.01
+
+[resource]
+material = SubResource("ShaderMaterial_jwrv2")
+center_offset = Vector3(0, 0.5, 0)

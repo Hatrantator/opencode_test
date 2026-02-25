@@ -1,0 +1,19 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dv1bubuc8v42i"]
+
+[ext_resource type="Shader" uid="uid://cm6flhly0giru" path="res://src/VFX/tornado/tornado_wave_vfx.tres" id="1_703xq"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_6y6yx"]
+load_path = "res://.godot/imported/dust0.png-af12e80e8f5c88ba22890f87dc0f5b58.s3tc.ctex"
+
+[sub_resource type="Gradient" id="Gradient_7aepm"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_b0c60"]
+gradient = SubResource("Gradient_7aepm")
+fill_from = Vector2(1, 0.23076923)
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_703xq")
+shader_parameter/base_texture = SubResource("CompressedTexture2D_6y6yx")
+shader_parameter/gradient_texture = SubResource("GradientTexture2D_b0c60")

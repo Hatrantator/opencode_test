@@ -1,0 +1,15 @@
+// @name {{NAME}}
+// @category {{CATEGORY}}
+// @type Compute
+// @description {{DESCRIPTION}}
+
+// @header#[compute]
+// @version#version 450
+
+// @imageuniformlayout(set = 0, binding = {{BINDID}}, {[FORMAT]}) {{READWRITE}} uniform image2D {{PREFIX}}Texture;
+
+// @workgrouplayout(local_size_x = {{X}}, local_size_y = {{Y}}) in;
+
+void main() {
+	{{MAINBODY}}
+}

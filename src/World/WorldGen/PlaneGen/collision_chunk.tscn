@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://dlmcx8uoo3mci"]
+
+[ext_resource type="Script" uid="uid://d241bfjktjfgh" path="res://src/World/WorldGen/PlaneGen/collisionmap.gd" id="1_8jf2l"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_8jf2l"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kf713"]
+size = Vector2(8, 8)
+subdivide_width = 7
+subdivide_depth = 7
+
+[node name="CollisionChunk" type="CollisionShape3D"]
+shape = SubResource("ConcavePolygonShape3D_8jf2l")
+debug_color = Color(0.920489, 5.92971e-05, 0.694692, 0.42)
+script = ExtResource("1_8jf2l")
+template_mesh = SubResource("PlaneMesh_kf713")

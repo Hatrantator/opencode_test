@@ -1,0 +1,19 @@
+[gd_resource type="ParticleProcessMaterial" format=3 uid="uid://cjwe13bal7dw2"]
+
+[resource]
+resource_local_to_scene = true
+particle_flag_align_y = true
+emission_shape = 3
+emission_box_extents = Vector3(64, 1, 64)
+angle_min = 1.0728836e-05
+angle_max = 180.00002
+direction = Vector3(0, 1, 0)
+flatness = 0.5
+initial_velocity_min = 2.5
+initial_velocity_max = 3.0
+gravity = Vector3(0, 0.098, 0)
+damping_min = 0.25
+damping_max = 0.5
+scale_min = 0.35
+scale_max = 0.75
+turbulence_enabled = true

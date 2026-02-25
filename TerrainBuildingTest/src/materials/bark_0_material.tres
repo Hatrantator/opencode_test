@@ -1,0 +1,26 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dhv2x3v22vg7d"]
+
+[ext_resource type="Texture2D" uid="uid://cac34ynuyy3vt" path="res://TerrainBuildingTest/Assets/textures1_T_Bark_01_basecolor.png" id="1_8a18j"]
+[ext_resource type="Texture2D" uid="uid://bl6oq1aocbxo7" path="res://TerrainBuildingTest/src/assets/2D/Bark_01/T_Bark_01_ambientocclusion.png" id="2_82y0m"]
+[ext_resource type="Texture2D" uid="uid://brae0x4boci77" path="res://TerrainBuildingTest/Assets/textures1_T_Noise_02.jpg" id="2_n7ma3"]
+[ext_resource type="Texture2D" uid="uid://ba3pafg0r3bq8" path="res://TerrainBuildingTest/Assets/textures1_T_Bark_01_normal_OpenGL.png" id="3_o6wil"]
+[ext_resource type="Texture2D" uid="uid://ci3h7okcudu5l" path="res://TerrainBuildingTest/src/assets/2D/Bark_01/T_Bark_01_height.png" id="4_u00kg"]
+[ext_resource type="Texture2D" uid="uid://d3ifgfhl5lmup" path="res://TerrainBuildingTest/src/assets/2D/Bark_01/T_Bark_01_metallic.png" id="5_a1irr"]
+[ext_resource type="Texture2D" uid="uid://b4vdtlt3dflya" path="res://TerrainBuildingTest/src/assets/2D/Bark_01/T_Bark_01_roughness.png" id="7_ntwmp"]
+
+[resource]
+albedo_texture = ExtResource("1_8a18j")
+metallic = 1.0
+metallic_texture = ExtResource("5_a1irr")
+roughness_texture = ExtResource("7_ntwmp")
+normal_enabled = true
+normal_texture = ExtResource("3_o6wil")
+ao_enabled = true
+ao_light_affect = 1.0
+ao_texture = ExtResource("2_82y0m")
+heightmap_enabled = true
+heightmap_texture = ExtResource("4_u00kg")
+heightmap_flip_texture = true
+detail_enabled = true
+detail_mask = ExtResource("2_n7ma3")
+detail_blend_mode = 3

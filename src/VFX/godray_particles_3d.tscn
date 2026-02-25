@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://dgfhp34wqvn3u"]
+
+[ext_resource type="Material" uid="uid://dw6pxm8g3sxwv" path="res://src/Resources/Materials/godray_particle_shader_material.tres" id="1_i8o07"]
+[ext_resource type="Material" uid="uid://cykxbt4edyh56" path="res://src/Resources/Materials/godray_particle_mesh_material.tres" id="2_a3yso"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_md633"]
+material = ExtResource("2_a3yso")
+size = Vector2(2, 32)
+subdivide_width = 4
+center_offset = Vector3(0, 8, 0)
+
+[node name="GodrayParticles3D" type="GPUParticles3D"]
+cast_shadow = 0
+extra_cull_margin = 64.0
+amount = 32
+explosiveness = 1.0
+randomness = 1.0
+local_coords = true
+transform_align = 1
+process_material = ExtResource("1_i8o07")
+draw_pass_1 = SubResource("QuadMesh_md633")
+metadata/_edit_group_ = true

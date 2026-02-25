@@ -1,0 +1,105 @@
+[gd_scene load_steps=13 format=3 uid="uid://dus2kvp6jei5k"]
+
+[ext_resource type="Shader" uid="uid://utwunq07f6gf" path="res://src/Resources/Shader/gridmap_ground.gdshader" id="1_iyi7s"]
+[ext_resource type="Material" uid="uid://cbqi2oostpgws" path="res://DEMO/Level/Resources/pixel_ground_shader_material.tres" id="2_15aoh"]
+[ext_resource type="Script" uid="uid://bsk7k1m34ko35" path="res://DEMO/VFX/shell_texture.gd" id="3_mmrys"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r2pon"]
+render_priority = 0
+shader = ExtResource("1_iyi7s")
+shader_parameter/smoothed_wind_direction = Vector2(0, 0)
+shader_parameter/smoothed_wind_speed = 0.0
+shader_parameter/albedo = Color(0.294118, 0.690196, 0.192157, 1)
+shader_parameter/use_albedo_mask = false
+shader_parameter/use_albedo_texture = false
+shader_parameter/alpha_scissor = 0.0
+shader_parameter/backlight_color = Color(0, 0, 0, 1)
+shader_parameter/backlight_amount = 0.0
+shader_parameter/use_billboard = false
+shader_parameter/wind_sway = false
+shader_parameter/use_multimesh = false
+shader_parameter/clamp_diffuse_to_max = false
+shader_parameter/use_attenuation = true
+shader_parameter/cuts = 3
+shader_parameter/wrap = 0.17
+shader_parameter/steepness = 3.0
+shader_parameter/use_specular = false
+shader_parameter/specular_strength = 1.0
+shader_parameter/specular_shininess = 16.0
+shader_parameter/use_rim = false
+shader_parameter/rim_width = 8.0
+shader_parameter/rim_color = Color(1, 1, 1, 1)
+shader_parameter/use_ramp = false
+shader_parameter/use_borders = false
+shader_parameter/border_width = 0.01
+
+[sub_resource type="BoxMesh" id="BoxMesh_sf0or"]
+material = SubResource("ShaderMaterial_r2pon")
+size = Vector3(2.001, 2.001, 2.001)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_34qjl"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_34qjl"]
+material = ExtResource("2_15aoh")
+size = Vector3(2, 1, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sf0or"]
+size = Vector3(2, 1, 2)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r6ikd"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_30hqb"]
+frequency = 0.0095
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7hh3v"]
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_30hqb")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_vd2uh"]
+as_normal_map = true
+noise = SubResource("FastNoiseLite_30hqb")
+
+[node name="GroundTiles" type="Node3D"]
+
+[node name="GroundTile" type="MeshInstance3D" parent="."]
+extra_cull_margin = 100.0
+mesh = SubResource("BoxMesh_sf0or")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="GroundTile"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GroundTile/StaticBody3D"]
+shape = SubResource("BoxShape3D_34qjl")
+
+[node name="GroundTileFlate" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_34qjl")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="GroundTileFlate"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GroundTileFlate/StaticBody3D"]
+shape = SubResource("BoxShape3D_sf0or")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_r6ikd")
+
+[node name="ShellTexture" type="Node" parent="MeshInstance3D"]
+script = ExtResource("3_mmrys")
+preview_in_editor = false
+target_surfaces = Array[int]([0])
+lod_min_distance = 24.0
+lod_max_distance = 48.0
+length = 0.5
+density = 0.016
+seed = 4909
+scruffiness = 0.016
+turbulence_texture = SubResource("NoiseTexture2D_7hh3v")
+turbulence_strength = 0.271
+jitter_texture = SubResource("NoiseTexture2D_vd2uh")
+albedo_color = Color(0.486275, 0.752941, 0.207843, 1)
+spring_constant = 10.0
+damping = 4.0
+stretch = 2.5
+stiffness = 0.1
+metadata/_custom_type_script = "uid://bsk7k1m34ko35"

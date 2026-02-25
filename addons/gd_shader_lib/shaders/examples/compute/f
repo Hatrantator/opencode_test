@@ -1,0 +1,9 @@
+#[compute]
+#version 450
+layout(local_size_x = 8, local_size_y = 8) in;
+layout(set = 0, binding = 0, rgba8) readonly uniform image2D InTexture;
+void main() {
+	ivec2 uv = ivec2(gl_GlobalInvocationID.xy);
+	vec4 colorIn = imageLoad(InTexture, uv); //reading Image
+	vec3 greyscale = vec3((colorIn.r + colorIn.g + colorIn.b) / 3.0);
+}

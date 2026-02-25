@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://c23awyg8lohxo"]
+
+[ext_resource type="Script" uid="uid://cyw0epntx6i1w" path="res://addons/gd_shader_lib/dock/dynamic_texture_ui.gd" id="1_rai40"]
+
+[node name="DynamicTexture" type="Control" unique_id=649352895]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rai40")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=306858215]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1622092213]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1954356255]
+layout_mode = 2
+text = "Shader Settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ShaderParam" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=165649581]
+layout_mode = 2
+
+[node name="NameEdit" type="LineEdit" parent="PanelContainer/VBoxContainer/ShaderParam" unique_id=672661636]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+placeholder_text = "ShaderName"
+
+[node name="WorkGroupOptionButton" type="OptionButton" parent="PanelContainer/VBoxContainer/ShaderParam" unique_id=1579227745]
+layout_mode = 2
+selected = 0
+item_count = 5
+popup/item_0/text = "8x8"
+popup/item_0/id = 0
+popup/item_1/text = "16x8"
+popup/item_1/id = 1
+popup/item_2/text = "16x16"
+popup/item_2/id = 2
+popup/item_3/text = "32x8"
+popup/item_3/id = 3
+popup/item_4/text = "32x16"
+popup/item_4/id = 4
+
+[node name="ComputeButton" type="Button" parent="PanelContainer/VBoxContainer/ShaderParam" unique_id=146946429]
+layout_mode = 2
+text = "Save Shader"
+
+[node name="GDButton" type="Button" parent="PanelContainer/VBoxContainer/ShaderParam" unique_id=1219132133]
+layout_mode = 2
+text = "Save GDScript"
+
+[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1699968559]
+layout_mode = 2
+text = "New ImageUniform"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1938017918]
+layout_mode = 2
+
+[node name="PrefixEdit" type="LineEdit" parent="PanelContainer/VBoxContainer/Panel" unique_id=680532112]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+placeholder_text = "TexturePrefix"
+
+[node name="InOutOptionButton" type="OptionButton" parent="PanelContainer/VBoxContainer/Panel" unique_id=500453820]
+layout_mode = 2
+selected = 0
+item_count = 5
+popup/item_0/text = "InTexture"
+popup/item_0/id = 0
+popup/item_1/text = "OutTexture"
+popup/item_1/id = 1
+popup/item_2/text = "Sampler2D"
+popup/item_2/id = 2
+popup/item_3/text = "ParameterUniform"
+popup/item_3/id = 3
+popup/item_4/text = "Buffer(SSBO)"
+popup/item_4/id = 4
+
+[node name="FormatOptionButton" type="OptionButton" parent="PanelContainer/VBoxContainer/Panel" unique_id=960391244]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "RGBAF"
+popup/item_0/id = 0
+popup/item_1/text = "RGBA8"
+popup/item_1/id = 1
+popup/item_2/text = "RGBA16F"
+popup/item_2/id = 2
+
+[node name="Button" type="Button" parent="PanelContainer/VBoxContainer/Panel" unique_id=827291467]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+text = "(+)Add"
+
+[node name="Tree" type="Tree" parent="PanelContainer/VBoxContainer" unique_id=499793060]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/ShaderParam/ComputeButton" to="." method="_on_compute_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/ShaderParam/GDButton" to="." method="_on_gd_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/Panel/Button" to="." method="_on_button_pressed"]
+[connection signal="gui_input" from="PanelContainer/VBoxContainer/Tree" to="." method="_on_tree_gui_input"]

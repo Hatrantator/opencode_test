@@ -1,0 +1,121 @@
+[gd_scene load_steps=7 format=3 uid="uid://crs5n1f835wc"]
+
+[ext_resource type="Script" uid="uid://bj0xd7oiu3ubf" path="res://src/World/WorldGen/grid_map_world_gen.gd" id="1_40k37"]
+[ext_resource type="Texture2D" uid="uid://ca55h5qh4u1ef" path="res://Assets/2D/height_Out.png" id="2_ghmad"]
+[ext_resource type="Texture2D" uid="uid://l3y1jwg1340v" path="res://Assets/2D/rocks_Out.png" id="3_37bbp"]
+[ext_resource type="Script" uid="uid://cdnk6hktrc4sj" path="res://src/World/Weather/weather_simulator.gd" id="4_lilr3"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ey8ft"]
+noise_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_csass"]
+height = 1
+generate_mipmaps = false
+seamless = true
+noise = SubResource("FastNoiseLite_ey8ft")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+size = Vector2i(640, 360)
+render_target_update_mode = 4
+
+[node name="World" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="WorldGen" type="Node3D" parent="SubViewportContainer/SubViewport/World"]
+script = ExtResource("1_40k37")
+debug = true
+render_distance = 1
+heightmap = ExtResource("2_ghmad")
+placementmap = ExtResource("3_37bbp")
+
+[node name="WeatherSimulator" type="Node" parent="SubViewportContainer/SubViewport/World/WorldGen"]
+script = ExtResource("4_lilr3")
+debug = true
+debug_speed = 12.0
+forecast_texture = SubResource("NoiseTexture2D_csass")
+godray_color_day = Color(1, 1, 0.196078, 1)
+godray_color_night = Color(0.907942, 0.907942, 0.907942, 1)
+
+[node name="WeatherUI" type="Control" parent="SubViewportContainer/SubViewport/World/WorldGen/WeatherSimulator"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/World/WorldGen/WeatherSimulator/WeatherUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Seg1" type="Control" parent="SubViewportContainer/SubViewport/World/WorldGen/WeatherSimulator/WeatherUI/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/World/WorldGen/WeatherSimulator/WeatherUI/HBoxContainer/Seg1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Seg2" type="Control" parent="SubViewportContainer/SubViewport/World/WorldGen/WeatherSimulator/WeatherUI/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/World/WorldGen/WeatherSimulator/WeatherUI/HBoxContainer/Seg2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Seg3" type="Control" parent="SubViewportContainer/SubViewport/World/WorldGen/WeatherSimulator/WeatherUI/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="SubViewportContainer/SubViewport/World/WorldGen/WeatherSimulator/WeatherUI/HBoxContainer/Seg3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="DayProgressBar" type="ProgressBar" parent="SubViewportContainer/SubViewport/World/WorldGen/WeatherSimulator/WeatherUI/HBoxContainer/Seg3/VBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+max_value = 1.0
+step = 0.005
+show_percentage = false

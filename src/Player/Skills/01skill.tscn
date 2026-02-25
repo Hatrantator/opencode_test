@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://ch1hxr2v5sl85"]
+
+[ext_resource type="Script" uid="uid://tjdj0iy2jy3r" path="res://src/Player/Skills/skill_builder_tool.gd" id="1_cqo56"]
+
+[node name="SkillBuilderTool" type="Node3D"]
+script = ExtResource("1_cqo56")
+metadata/_custom_type_script = "uid://tjdj0iy2jy3r"

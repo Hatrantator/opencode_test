@@ -1,0 +1,64 @@
+[gd_scene load_steps=9 format=3 uid="uid://byjsri04n8e4m"]
+
+[ext_resource type="Script" uid="uid://ds2dnvtkr74o7" path="res://src/World/WorldGen/plane_chunk.gd" id="1_aotkx"]
+[ext_resource type="Shader" uid="uid://utwunq07f6gf" path="res://src/Resources/Shader/gridmap_ground.gdshader" id="2_u1eer"]
+[ext_resource type="Script" uid="uid://bsk7k1m34ko35" path="res://DEMO/VFX/shell_texture.gd" id="4_wq353"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_coapk"]
+render_priority = 0
+shader = ExtResource("2_u1eer")
+shader_parameter/albedo = Color(0.294118, 0.690196, 0.192157, 1)
+shader_parameter/use_albedo_mask = false
+shader_parameter/use_albedo_texture = false
+shader_parameter/alpha_scissor = 0.0
+shader_parameter/backlight_color = Color(0, 0, 0, 1)
+shader_parameter/backlight_amount = 0.0
+shader_parameter/use_billboard = false
+shader_parameter/wind_sway = false
+shader_parameter/clamp_diffuse_to_max = false
+shader_parameter/use_attenuation = true
+shader_parameter/cuts = 3
+shader_parameter/wrap = 0.17
+shader_parameter/steepness = 3.0
+shader_parameter/use_specular = false
+shader_parameter/specular_strength = 1.0
+shader_parameter/specular_shininess = 16.0
+shader_parameter/use_rim = true
+shader_parameter/rim_width = 8.0
+shader_parameter/rim_color = Color(1, 1, 1, 1)
+shader_parameter/use_ramp = false
+shader_parameter/use_borders = false
+shader_parameter/border_width = 0.01
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_b5p64"]
+material = SubResource("ShaderMaterial_coapk")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_30hqb"]
+frequency = 0.0095
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_io1iu"]
+as_normal_map = true
+noise = SubResource("FastNoiseLite_30hqb")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_x1bnl"]
+as_normal_map = true
+noise = SubResource("FastNoiseLite_30hqb")
+
+[node name="PlaneChunk" type="Node3D"]
+script = ExtResource("1_aotkx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_b5p64")
+
+[node name="ShellTexture" type="Node" parent="MeshInstance3D"]
+script = ExtResource("4_wq353")
+number_of_shells = 128
+length = 1.0
+seed = 63132
+thickness_scale = 4.0
+turbulence_texture = SubResource("NoiseTexture2D_io1iu")
+jitter_texture = SubResource("NoiseTexture2D_x1bnl")
+albedo_color = Color(0.294118, 0.690196, 0.192157, 1)
+physics_enabled = false
+metadata/_custom_type_script = "uid://bsk7k1m34ko35"

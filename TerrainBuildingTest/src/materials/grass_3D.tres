@@ -1,0 +1,66 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://rowbllwxr1ix"]
+
+[ext_resource type="Shader" uid="uid://bbhurovuv1hy" path="res://addons/gd_shader_lib/shaders/examples/grass.gdshader" id="1_6lqv6"]
+
+[sub_resource type="Gradient" id="Gradient_awlxp"]
+offsets = PackedFloat32Array(0, 0.9861111)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_q26ud"]
+noise_type = 2
+frequency = 0.0422
+fractal_type = 0
+cellular_distance_function = 3
+cellular_return_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_r8yjv"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_q26ud")
+color_ramp = SubResource("Gradient_awlxp")
+
+[sub_resource type="Gradient" id="Gradient_wnqw4"]
+offsets = PackedFloat32Array(0.05, 0.5, 1)
+colors = PackedColorArray(0.14509805, 0.5019608, 0.85490197, 1, 0.5019608, 0.85490197, 0.85490197, 1, 0.85490197, 0.5019608, 0.85490197, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_awlxp"]
+gradient = SubResource("Gradient_wnqw4")
+width = 128
+height = 128
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_wnqw4"]
+frequency = 0.0015
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_awlxp"]
+noise = SubResource("FastNoiseLite_wnqw4")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_fevyy"]
+noise_type = 3
+seed = 4
+frequency = 0.005
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_hibaj"]
+noise = SubResource("FastNoiseLite_fevyy")
+seamless = true
+in_3d_space = true
+
+[resource]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_6lqv6")
+shader_parameter/vMaskThreshold = 0.5
+shader_parameter/vMaskScale = 64.0
+shader_parameter/hueMaskTexture = SubResource("NoiseTexture2D_r8yjv")
+shader_parameter/hueMaskScale = 64.0
+shader_parameter/we_height_map = SubResource("NoiseTexture2D_awlxp")
+shader_parameter/invert_height = false
+shader_parameter/we_heightmap_scale = 0.0
+shader_parameter/we_player_position = Vector3(0, 0, 0)
+shader_parameter/normal_texture = SubResource("GradientTexture2D_awlxp")
+shader_parameter/clumping_factor = 0.5
+shader_parameter/clump_noise = SubResource("NoiseTexture2D_r8yjv")
+shader_parameter/wind_speed = 1.0
+shader_parameter/wind_noise = SubResource("NoiseTexture2D_hibaj")
+shader_parameter/base_color = Color(0.07450981, 0.38039216, 0, 1)
+shader_parameter/tip_color = Color(0.38939998, 0.6, 0.114, 1)
+shader_parameter/subsurface_scattering_color = Color(0.41479993, 0.68, 0.27199998, 1)

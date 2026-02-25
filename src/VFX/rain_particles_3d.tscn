@@ -1,0 +1,65 @@
+[gd_scene load_steps=6 format=3 uid="uid://bfwhluyfrosnn"]
+
+[ext_resource type="Material" uid="uid://bnfy8ou3wfucx" path="res://src/Resources/Materials/rain_mesh_material.tres" id="1_nt7x7"]
+[ext_resource type="Shader" uid="uid://biooxsigpv2n3" path="res://src/Resources/Shader/rain_particles.gdshader" id="2_nt7x7"]
+[ext_resource type="Script" uid="uid://do6as7ayvy0gg" path="res://src/VFX/rain_particles_3d.gd" id="3_dwikf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nt7x7"]
+shader = ExtResource("2_nt7x7")
+shader_parameter/direction = Vector3(-1, 0, 0)
+shader_parameter/spread = 0.0
+shader_parameter/flatness = 0.0
+shader_parameter/inherit_emitter_velocity_ratio = 0.0
+shader_parameter/initial_linear_velocity_min = 1.0
+shader_parameter/initial_linear_velocity_max = 1.0
+shader_parameter/directional_velocity_min = 1.0
+shader_parameter/directional_velocity_max = 1.0
+shader_parameter/angular_velocity_min = 0.0
+shader_parameter/angular_velocity_max = 0.0
+shader_parameter/orbit_velocity_min = 0.0
+shader_parameter/orbit_velocity_max = 0.0
+shader_parameter/radial_velocity_min = 0.0
+shader_parameter/radial_velocity_max = 0.0
+shader_parameter/linear_accel_min = 0.0
+shader_parameter/linear_accel_max = 0.0
+shader_parameter/radial_accel_min = 0.0
+shader_parameter/radial_accel_max = 0.0
+shader_parameter/tangent_accel_min = 0.0
+shader_parameter/tangent_accel_max = 0.0
+shader_parameter/damping_min = 0.0
+shader_parameter/damping_max = 0.0
+shader_parameter/initial_angle_min = 1.07288e-05
+shader_parameter/initial_angle_max = 1.07288e-05
+shader_parameter/scale_min = 1.0
+shader_parameter/scale_max = 1.0
+shader_parameter/hue_variation_min = 0.0
+shader_parameter/hue_variation_max = 0.0
+shader_parameter/anim_speed_min = 0.0
+shader_parameter/anim_speed_max = 0.0
+shader_parameter/anim_offset_min = 0.0
+shader_parameter/anim_offset_max = 0.0
+shader_parameter/lifetime_randomness = 0.0
+shader_parameter/emission_shape_offset = Vector3(0, 0, 0)
+shader_parameter/emission_shape_scale = Vector3(1, 1, 1)
+shader_parameter/velocity_pivot = Vector3(0, 0, 0)
+shader_parameter/emission_box_extents = Vector3(32, 1, 32)
+shader_parameter/color_value = Color(1, 1, 1, 1)
+shader_parameter/gravity = Vector3(0, -9.8, 0)
+
+[sub_resource type="QuadMesh" id="QuadMesh_hc5pl"]
+size = Vector2(0.5, 1)
+
+[node name="RainParticles3D" type="GPUParticles3D" groups=["RAIN"]]
+material_override = ExtResource("1_nt7x7")
+cast_shadow = 0
+emitting = false
+amount = 4096
+lifetime = 10.0
+randomness = 1.0
+fixed_fps = 60
+collision_base_size = 0.5
+visibility_aabb = AABB(-64.9629, -493.431, -16.96, 129.895, 495.429, 33.9492)
+local_coords = true
+process_material = SubResource("ShaderMaterial_nt7x7")
+draw_pass_1 = SubResource("QuadMesh_hc5pl")
+script = ExtResource("3_dwikf")

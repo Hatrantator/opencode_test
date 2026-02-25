@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cdt5uccwgvi4k"]
+
+[ext_resource type="Shader" uid="uid://b3dgwiplnchip" path="res://src/World/WorldGen/PlaneGen/plane_clipmap.gdshader" id="1_vaaky"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_vaaky")

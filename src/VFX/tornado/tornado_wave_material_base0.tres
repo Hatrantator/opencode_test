@@ -1,0 +1,32 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://b8sh40kpivope"]
+
+[ext_resource type="Shader" uid="uid://cm6flhly0giru" path="res://src/VFX/tornado/tornado_wave_vfx.tres" id="1_mgdtg"]
+
+[sub_resource type="Gradient" id="Gradient_tylg6"]
+offsets = PackedFloat32Array(0, 0.8370607, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.8346143, 0.8346143, 0.8346143, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ptxf0"]
+noise_type = 2
+seed = 1
+frequency = 0.0114
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_tnwr6"]
+width = 1024
+height = 1024
+noise = SubResource("FastNoiseLite_ptxf0")
+color_ramp = SubResource("Gradient_tylg6")
+seamless = true
+
+[sub_resource type="Gradient" id="Gradient_hqjlj"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_63mco"]
+gradient = SubResource("Gradient_hqjlj")
+fill_from = Vector2(1, 0.102564104)
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_mgdtg")
+shader_parameter/base_texture = SubResource("NoiseTexture2D_tnwr6")
+shader_parameter/gradient_texture = SubResource("GradientTexture2D_63mco")

@@ -1,0 +1,40 @@
+// @name {{NAME}}
+// @category {{CATEGORY}}
+// @type Compute
+// @description {{DESCRIPTION}}
+#[compute]
+#version 450
+
+| Purpose        | Format    |
+| -------------- | --------- |
+| Height / Slope | `R16F`    |
+| Normals        | `RGBA16F` |
+| IDs / Masks    | `RGBA8`   |
+| Placement      | `RGBA16F` |
+layout(set = 0, binding = 0, rgba32f) readonly uniform image2D {{PREFIX}}ImputTexture;
+layout(set = 0, binding = 1, rgba32f) writeonly restrict uniform image2D {{PREFIX}}OutputTexture;
+
+//local_size = Workgroup Size - not Texture Size
+//| Use Case                   | Recommended   |
+//| -------------------------- | ------------- |
+//| simple texel operations    | 8×8           |
+//| high ALU little memory     | 16×16         |
+//| big textures (4k–8k)       | 8×8 oder 16×8 |
+//| -------------------------- | ------------- |
+// #check the max invocations in gdscript:
+// var limits = rd.get_device_limits()
+// print(limits.max_compute_work_group_invocations)
+// #dispatch like this:
+// dispatch_x = ceil(texture_width  / local_size_x)
+// dispatch_y = ceil(texture_height / local_size_y)
+layout(local_size_x = 8, local_size_y = 8) in;
+
+void main() {
+	ivec2 uv = ivec2(gl_GlobalInvocationID.xy);
+	if (uv.x >= width || uv.y >= height) return; // must if not divisible
+	
+	vec4 color = imageLoad({{PREFIX}}ImputTexture, uv);
+	vec3 grayscale = vec3((color.r + color.g + color.b) / 3.0);
+	
+	imageStore({{PREFIX}}OutputTexture, uv, vec4(grayscale, 1.0));
+}

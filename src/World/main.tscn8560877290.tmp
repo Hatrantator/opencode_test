@@ -1,0 +1,92 @@
+[gd_scene load_steps=11 format=3 uid="uid://c7j437kg3lulb"]
+
+[ext_resource type="Sky" uid="uid://clrlfo7n8gp5i" path="res://DEMO/VFX/std_sky.tres" id="1_ne47e"]
+[ext_resource type="Script" uid="uid://bjjn55es05idw" path="res://src/Environment/sun_light_3d.gd" id="1_q3pgc"]
+[ext_resource type="Script" uid="uid://bj0xd7oiu3ubf" path="res://src/World/WorldGen/grid_map_world_gen.gd" id="2_54dq0"]
+[ext_resource type="Texture2D" uid="uid://ca55h5qh4u1ef" path="res://Assets/2D/height_Out.png" id="3_1ssvs"]
+[ext_resource type="Texture2D" uid="uid://l3y1jwg1340v" path="res://Assets/2D/rocks_Out.png" id="4_pb2bs"]
+[ext_resource type="Script" uid="uid://cdnk6hktrc4sj" path="res://src/World/Weather/weather_simulator.gd" id="6_3j51k"]
+[ext_resource type="PackedScene" uid="uid://uravwb0j6tk" path="res://src/Player/player_3d.tscn" id="7_1br5e"]
+[ext_resource type="Script" uid="uid://dpysj7kg4cfgw" path="res://DEMO/Level/display.gd" id="10_jtg85"]
+
+[sub_resource type="Environment" id="Environment_3emec"]
+background_mode = 2
+sky = ExtResource("1_ne47e")
+sdfgi_use_occlusion = true
+sdfgi_read_sky_light = false
+sdfgi_cascades = 2
+sdfgi_max_distance = 51.2
+sdfgi_y_scale = 2
+adjustment_enabled = true
+adjustment_saturation = 0.92
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_0u3d1"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.573576, 0.819152, 0, -0.819152, 0.573576, 0, 0, 0)
+light_color = Color(1, 1, 0.784314, 1)
+light_energy = 0.5
+shadow_enabled = true
+shadow_normal_bias = 1.0
+shadow_blur = 0.05
+script = ExtResource("1_q3pgc")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_3emec")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+size = Vector2i(640, 360)
+render_target_update_mode = 4
+
+[node name="World" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="WorldGen" type="Node3D" parent="SubViewportContainer/SubViewport/World" node_paths=PackedStringArray("player_character")]
+script = ExtResource("2_54dq0")
+debug = true
+player_character = NodePath("../Player3D")
+render_distance = 1
+heightmap = ExtResource("3_1ssvs")
+placementmap = ExtResource("4_pb2bs")
+
+[node name="WeatherSimulator" type="Node" parent="SubViewportContainer/SubViewport/World/WorldGen"]
+script = ExtResource("6_3j51k")
+
+[node name="Player3D" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("7_1br5e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+allow_process = false
+move_speed = 12.0
+angular_acceleration = 8
+jump_initial_impulse = 20.0
+
+[node name="Display" type="Control" parent="." node_paths=PackedStringArray("viewport")]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("10_jtg85")
+viewport = NodePath("../SubViewportContainer/SubViewport")
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Display"]
+texture = SubResource("ViewportTexture_0u3d1")
+centered = false

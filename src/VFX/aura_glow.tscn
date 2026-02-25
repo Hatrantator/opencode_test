@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://fw7aeuek3yh8"]
+
+[ext_resource type="Material" uid="uid://b10ssedugfl4g" path="res://src/Resources/Materials/aura_glow.tres" id="1_sh3om"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_gds4k"]
+size = Vector2(1, 12)
+center_offset = Vector3(0, 6, 0)
+
+[node name="AuraGlow" type="MeshInstance3D"]
+mesh = SubResource("QuadMesh_gds4k")
+surface_material_override/0 = ExtResource("1_sh3om")

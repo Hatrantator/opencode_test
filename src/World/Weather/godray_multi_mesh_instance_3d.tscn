@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0ij2mt6jn37f"]
+
+[ext_resource type="Script" uid="uid://b6ymfxbqed7gx" path="res://src/World/Weather/godray_multi_mesh_instance_3d.gd" id="1_oqlp3"]
+
+[node name="GodrayMultiMeshInstance3D" type="MultiMeshInstance3D"]
+script = ExtResource("1_oqlp3")

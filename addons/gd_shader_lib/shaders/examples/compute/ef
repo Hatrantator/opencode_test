@@ -1,0 +1,9 @@
+
+	var _image := Image.new()
+	image.convert(Image.FORMAT_RGBA8)
+	var compute_shader := ComputeHelper.create('this is a path')
+	var _in_texture := ImageUniform.create(_image)
+	compute_shader.add_uniform_array([_in_texture,]])
+	var work_groups := Vector3i(_image.get_width(),_image.get_height(),1)
+	compute_shader.run(work_groups)
+	ComputeHelper.sync()

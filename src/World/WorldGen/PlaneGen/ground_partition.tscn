@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dpbv32hnvxmwd"]
+
+[ext_resource type="Script" uid="uid://fljbfejtpqw3" path="res://src/World/WorldGen/PlaneGen/ground_partition.gd" id="1_wi54c"]
+
+[node name="GroundPartition" type="MeshInstance3D"]
+extra_cull_margin = 512.0
+script = ExtResource("1_wi54c")

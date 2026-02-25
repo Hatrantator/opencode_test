@@ -1,0 +1,22 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://g4bixvx48mbu"]
+
+[ext_resource type="Shader" uid="uid://jvo7is0prm7l" path="res://src/VFX/tornado/tornado_shader.tres" id="1_l14yw"]
+[ext_resource type="Texture2D" uid="uid://c2qnmtsbuvnry" path="res://src/VFX/bw_textures/caustics1.png" id="2_ik76v"]
+[ext_resource type="Texture2D" uid="uid://dgd0aa6c7b4pq" path="res://src/VFX/tornado/test_tornado_water_gradient.tres" id="3_2syfg"]
+
+[sub_resource type="Gradient" id="Gradient_r1b4a"]
+offsets = PackedFloat32Array(0, 0.031948883, 0.9584665, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pmaeb"]
+gradient = SubResource("Gradient_r1b4a")
+fill_from = Vector2(1, 1)
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_l14yw")
+shader_parameter/speed = Vector2(-0.5, 1)
+shader_parameter/base_texture = ExtResource("2_ik76v")
+shader_parameter/gradient_texture = SubResource("GradientTexture2D_pmaeb")
+shader_parameter/gradient_color_1d = ExtResource("3_2syfg")
+shader_parameter/alpha = 1.0

@@ -1,0 +1,128 @@
+[gd_scene format=3 uid="uid://bma1yxr7wf08v"]
+
+[ext_resource type="Script" uid="uid://conn87j1lhsig" path="res://addons/gd_shader_lib/dock/shader_wizard.gd" id="1_7102g"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7102g"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7102g"]
+
+[sub_resource type="Animation" id="Animation_7102g"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_o5yf0"]
+resource_name = "rotate"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.2831855, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qsidg"]
+_data = {
+&"RESET": SubResource("Animation_7102g"),
+&"rotate": SubResource("Animation_o5yf0")
+}
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qsidg"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_iujs5"]
+sky_material = SubResource("ProceduralSkyMaterial_qsidg")
+
+[sub_resource type="Environment" id="Environment_38wne"]
+background_mode = 2
+sky = SubResource("Sky_iujs5")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="AcceptDialog" type="AcceptDialog" unique_id=1279875246]
+oversampling_override = 1.0
+position = Vector2i(0, 36)
+size = Vector2i(528, 674)
+popup_window = true
+script = ExtResource("1_7102g")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1277332803]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -49.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer" unique_id=855815546]
+layout_mode = 2
+placeholder_text = "Input"
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer" unique_id=531499109]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Spatial"
+popup/item_0/id = 0
+popup/item_1/text = "CanvasItem"
+popup/item_1/id = 1
+popup/item_2/text = "Compute"
+popup/item_2/id = 2
+
+[node name="TextEdit" type="LineEdit" parent="VBoxContainer" unique_id=258850989]
+layout_mode = 2
+placeholder_text = "Description"
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="VBoxContainer" unique_id=1494951728]
+layout_mode = 2
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="VBoxContainer/SubViewportContainer" unique_id=121813332]
+handle_input_locally = false
+size = Vector2i(2, 2)
+render_target_update_mode = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VBoxContainer/SubViewportContainer/SubViewport" unique_id=1500267063]
+visible = false
+material_override = SubResource("ShaderMaterial_7102g")
+mesh = SubResource("BoxMesh_7102g")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="VBoxContainer/SubViewportContainer/SubViewport/MeshInstance3D" unique_id=1836087992]
+libraries/ = SubResource("AnimationLibrary_qsidg")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="VBoxContainer/SubViewportContainer/SubViewport" unique_id=896841817]
+environment = SubResource("Environment_38wne")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="VBoxContainer/SubViewportContainer/SubViewport" unique_id=553157169]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="VBoxContainer/SubViewportContainer/SubViewport" unique_id=1428961156]
+transform = Transform3D(0.7245449, -0.31853795, 0.61120236, 0, 0.88679314, 0.46216655, -0.68922764, -0.3348604, 0.64252144, 2.3873382, 1.4967127, 2.52953)
+
+[connection signal="custom_action" from="." to="." method="_on_custom_action"]
+[connection signal="text_changed" from="VBoxContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
+[connection signal="item_selected" from="VBoxContainer/OptionButton" to="." method="_on_option_button_item_selected"]

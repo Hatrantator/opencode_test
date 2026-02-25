@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://d3vq1fd58pwd2"]
+
+[ext_resource type="Shader" uid="uid://dslw7608od58y" path="res://addons/gd_shader_lib/shaders/examples/height_gradient.gdshader" id="1_440sq"]
+
+[sub_resource type="Gradient" id="Gradient_i88ys"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.1, 0.2, 0.5, 0.8)
+colors = PackedColorArray(0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_uy0m0"]
+gradient = SubResource("Gradient_i88ys")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_440sq")
+shader_parameter/height_gradient = SubResource("GradientTexture1D_uy0m0")
+shader_parameter/min_height = 0.0
+shader_parameter/max_height = 32.0

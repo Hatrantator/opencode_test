@@ -1,0 +1,19 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dmro4kpjb3llc"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_cnkao"]
+load_path = "res://.godot/imported/sprite_0038.png-1ffffb1607948ccbabcc5dbac3191c81.ctex"
+
+[resource]
+transparency = 2
+alpha_scissor_threshold = 0.65
+alpha_antialiasing_mode = 0
+cull_mode = 2
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.7019608, 0.7921569, 0.19215687, 1)
+albedo_texture = SubResource("CompressedTexture2D_cnkao")
+uv1_scale = Vector3(2, 2, 2)
+billboard_keep_scale = true
+stencil_mode = 3
+stencil_flags = 2
+stencil_reference = 255

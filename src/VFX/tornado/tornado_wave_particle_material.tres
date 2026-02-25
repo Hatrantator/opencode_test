@@ -1,0 +1,36 @@
+[gd_resource type="ParticleProcessMaterial" format=3 uid="uid://dd2lj1meahs3r"]
+
+[ext_resource type="Texture2D" uid="uid://djup1nkyykmhf" path="res://src/VFX/tornado/water_sphere_base1_gradient.tres" id="1_23es7"]
+
+[sub_resource type="Curve" id="Curve_xffrr"]
+_limits = [0.0, 1.5, 0.0, 1.0]
+_data = [Vector2(0, 0.42987812), 0.0, 0.0, 0, 0, Vector2(1, 1.5), 1.1750729, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_7j8vk"]
+texture_mode = 1
+curve = SubResource("Curve_xffrr")
+
+[sub_resource type="Curve" id="Curve_i4c45"]
+_data = [Vector2(0, 0.24695128), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_n552b"]
+curve = SubResource("Curve_i4c45")
+
+[resource]
+resource_local_to_scene = true
+particle_flag_rotate_y = true
+angle_min = -179.99998
+angle_max = 180.00002
+direction = Vector3(0, 1, 0)
+initial_velocity_max = 0.5
+angular_velocity_min = 359.99997
+angular_velocity_max = 499.99997
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 7.9999976
+scale_max = 2.5
+scale_curve = SubResource("CurveTexture_n552b")
+color_ramp = ExtResource("1_23es7")
+alpha_curve = SubResource("CurveTexture_7j8vk")

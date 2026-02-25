@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ci44fxvja28xq"]
+
+[ext_resource type="Script" uid="uid://st7b7ihgboej" path="res://TerrainBuildingTest/DynamicTexture/silhuette_object_3d.gd" id="1_lr4fd"]
+
+[node name="SilhuetteObject3D" type="Node3D" unique_id=1204466552]
+script = ExtResource("1_lr4fd")

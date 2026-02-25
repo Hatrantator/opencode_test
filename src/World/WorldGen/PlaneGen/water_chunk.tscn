@@ -1,0 +1,99 @@
+[gd_scene load_steps=13 format=3 uid="uid://cd81xaf3e5p5b"]
+
+[ext_resource type="Shader" uid="uid://tpc4sa8vf7e5" path="res://src/Resources/Shader/water_shader.gdshader" id="1_b0v48"]
+[ext_resource type="Script" uid="uid://hlns46n7sll" path="res://src/World/WorldGen/PlaneGen/water_chunk.gd" id="2_t2bgo"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7qby4"]
+noise_type = 2
+frequency = 0.015
+fractal_type = 0
+domain_warp_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_fi0nt"]
+width = 256
+height = 256
+generate_mipmaps = false
+seamless = true
+noise = SubResource("FastNoiseLite_7qby4")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_tu1xj"]
+noise_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0gyd2"]
+width = 256
+height = 256
+generate_mipmaps = false
+seamless = true
+noise = SubResource("FastNoiseLite_tu1xj")
+
+[sub_resource type="Gradient" id="Gradient_md633"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.178423, 0.197095)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5u2aj"]
+gradient = SubResource("Gradient_md633")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kuil7"]
+noise_type = 2
+seed = 1835
+frequency = 0.015
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jwuv4"]
+width = 256
+height = 256
+generate_mipmaps = false
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_kuil7")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fi0nt"]
+render_priority = 0
+shader = ExtResource("1_b0v48")
+shader_parameter/smoothed_wind_direction = Vector2(0, 0)
+shader_parameter/smoothed_wind_speed = 0.5
+shader_parameter/absorption_color = Color(1, 0.35, 0, 1)
+shader_parameter/alpha_threshold = 0.8
+shader_parameter/fresnel_radius = 2.0
+shader_parameter/fresnel_color = Color(0, 0.57, 0.72, 1)
+shader_parameter/roughness = 0.45
+shader_parameter/specular = 0.25
+shader_parameter/depth_distance = 3.0
+shader_parameter/beers_law = 4.5
+shader_parameter/displacement_strength = 0.1
+shader_parameter/displacement_scroll_speed = 0.1
+shader_parameter/displacement_scroll_offset = Vector2(-0.2, 0.3)
+shader_parameter/displacement_scale_offset = 0.5
+shader_parameter/displacement_scale = Vector2(0.04, 0.04)
+shader_parameter/displacement_texture = SubResource("NoiseTexture2D_fi0nt")
+shader_parameter/edge_thickness = 0.4
+shader_parameter/edge_speed = 0.35
+shader_parameter/edge_noise_scale = Vector2(0.4, 0.4)
+shader_parameter/edge_noise = SubResource("NoiseTexture2D_0gyd2")
+shader_parameter/edge_ramp = SubResource("GradientTexture1D_5u2aj")
+shader_parameter/influence_size = 3.0
+shader_parameter/player_wave_frequenzy = 15.0
+shader_parameter/player_wave_speed = 3.0
+shader_parameter/caustic_size = 1.25
+shader_parameter/caustic_range = 76.0
+shader_parameter/caustic_strength = 0.75
+shader_parameter/refraction_strength = 0.08
+shader_parameter/normal_map_strength = 0.4
+shader_parameter/scroll_speed = 1.0
+shader_parameter/scroll_offset = Vector2(0.1, -0.3)
+shader_parameter/scale_offset = 0.25
+shader_parameter/normal_map_scale = Vector2(2, 2)
+shader_parameter/normal_map = SubResource("NoiseTexture2D_jwuv4")
+shader_parameter/wind_intensity = 0.5
+shader_parameter/wind_direction = Vector3(0, 0, 0)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7qby4"]
+material = SubResource("ShaderMaterial_fi0nt")
+size = Vector2(64, 64)
+subdivide_width = 63
+subdivide_depth = 63
+
+[node name="WaterChunk" type="MeshInstance3D"]
+mesh = SubResource("PlaneMesh_7qby4")
+script = ExtResource("2_t2bgo")

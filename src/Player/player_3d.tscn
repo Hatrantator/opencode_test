@@ -1,0 +1,273 @@
+[gd_scene format=3 uid="uid://uravwb0j6tk"]
+
+[ext_resource type="Script" uid="uid://nyh6j1g84qwv" path="res://src/Player/player_3d.gd" id="1_1mqkk"]
+[ext_resource type="Script" uid="uid://b121c727m6wb4" path="res://src/Player/StateMachine/state_machine.gd" id="3_8tv5p"]
+[ext_resource type="Script" uid="uid://dmhuoq8lu1rob" path="res://src/Player/texel_camera_3d.gd" id="3_u5jub"]
+[ext_resource type="Script" uid="uid://cgf5q5paulpe5" path="res://src/Player/StateMachine/player_state_idle.gd" id="4_ake5j"]
+[ext_resource type="Script" uid="uid://cxb8lphk2rcxh" path="res://src/Player/StateMachine/player_state_walk.gd" id="5_0kfua"]
+[ext_resource type="Script" uid="uid://b5rq7pa7p3ugh" path="res://src/Player/StateMachine/player_state_run.gd" id="6_dvw8u"]
+[ext_resource type="Script" uid="uid://bmppkxflesldf" path="res://src/Player/StateMachine/player_state_fall.gd" id="7_mtmra"]
+[ext_resource type="Script" uid="uid://b6jdr8oivchdj" path="res://src/Player/StateMachine/player_state_carryobject.gd" id="8_y2i3y"]
+[ext_resource type="Script" uid="uid://b1q60ypdebf27" path="res://src/Player/StateMachine/player_state_attack.gd" id="9_hrwt8"]
+[ext_resource type="Script" uid="uid://dwvbrok52qoqn" path="res://src/Player/camera_spring_arm_3d.gd" id="9_neeau"]
+[ext_resource type="Script" uid="uid://bpldkri7buu73" path="res://src/Player/camera_follow_spring.gd" id="10_nuhqq"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nuhqq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2014f"]
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(0.26, 0.8890001, 1, 1)
+stencil_mode = 3
+stencil_flags = 1
+stencil_compare = 2
+stencil_reference = 255
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qmjp8"]
+next_pass = SubResource("StandardMaterial3D_2014f")
+transparency = 1
+no_depth_test = true
+albedo_color = Color(1, 1, 1, 0)
+stencil_mode = 3
+stencil_flags = 1
+stencil_compare = 2
+stencil_reference = 255
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nuhqq"]
+radius = 0.165
+height = 0.49
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4u03j"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrwt8"]
+albedo_color = Color(1, 0.45, 0.45, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u5jub"]
+size = Vector3(0.2, 0.4, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bft63"]
+albedo_color = Color(0.12405533, 0.06478215, 0.026501123, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gojkq"]
+size = Vector3(0.2, 0.1, 0.6)
+
+[sub_resource type="Animation" id="Animation_jnqwc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.523599, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_qjiio"]
+resource_name = "rotate_cam"
+length = 8.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.523599, 0, 0), Vector3(-0.523599, 6.28319, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xckay"]
+_data = {
+&"RESET": SubResource("Animation_jnqwc"),
+&"rotate_cam": SubResource("Animation_qjiio")
+}
+
+[sub_resource type="QuadMesh" id="QuadMesh_u5jub"]
+size = Vector2(40, 40)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gojkq"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_u346t"]
+height = 1.0
+radius = 1.5
+
+[sub_resource type="FogMaterial" id="FogMaterial_totvf"]
+density = -1.0
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_nuhqq"]
+dof_blur_far_enabled = true
+dof_blur_far_distance = 256.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_hrwt8"]
+radius = 0.75
+
+[node name="Player3D" type="CharacterBody3D" unique_id=1786887125]
+script = ExtResource("1_1mqkk")
+move_speed = 20.0
+jump_initial_impulse = 5.0
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=870156202]
+shape = SubResource("CapsuleShape3D_nuhqq")
+
+[node name="GPUParticlesCollisionBox3D" type="GPUParticlesCollisionBox3D" parent="CollisionShape3D" unique_id=189986674]
+size = Vector3(1, 2, 1)
+
+[node name="Visuals" type="Node3D" parent="." unique_id=828544738]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="Pivots" type="Node3D" parent="Visuals" unique_id=1329169014]
+metadata/_edit_group_ = true
+
+[node name="PlayerFrontPivot" type="Marker3D" parent="Visuals/Pivots" unique_id=1962091702]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.7)
+
+[node name="RightHandPivot" type="Marker3D" parent="Visuals/Pivots" unique_id=2063422284]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -0.6)
+
+[node name="HandInstance3D" type="MeshInstance3D" parent="Visuals/Pivots/RightHandPivot" unique_id=1301542972]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+material_overlay = SubResource("StandardMaterial3D_qmjp8")
+mesh = SubResource("CapsuleMesh_nuhqq")
+skeleton = NodePath("../../LeftHandPivot")
+
+[node name="Lantern" type="OmniLight3D" parent="Visuals/Pivots/RightHandPivot" unique_id=1346549095]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+light_color = Color(1, 0.4, 0, 1)
+shadow_enabled = true
+shadow_blur = 0.1
+omni_range = 6.0
+omni_attenuation = 0.4
+
+[node name="LeftHandPivot" type="Marker3D" parent="Visuals/Pivots" unique_id=17252546]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -0.6)
+
+[node name="HandInstance3D" type="MeshInstance3D" parent="Visuals/Pivots/LeftHandPivot" unique_id=1746005768]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+material_overlay = SubResource("StandardMaterial3D_qmjp8")
+mesh = SubResource("CapsuleMesh_nuhqq")
+
+[node name="CarryObjectPivot" type="Marker3D" parent="Visuals/Pivots" unique_id=2123076887]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+
+[node name="BodyMeshInstance3D" type="MeshInstance3D" parent="Visuals" unique_id=1933121589]
+material_overlay = SubResource("StandardMaterial3D_qmjp8")
+mesh = SubResource("CapsuleMesh_4u03j")
+
+[node name="NoseMeshInstance3D" type="MeshInstance3D" parent="Visuals" unique_id=801030029]
+transform = Transform3D(-4.16625e-08, 1.32257e-08, 1, 0.30257, 0.953127, 0, -0.953127, 0.30257, -4.37114e-08, 0.0280306, 0.228547, -0.525584)
+material_override = SubResource("StandardMaterial3D_hrwt8")
+material_overlay = SubResource("StandardMaterial3D_qmjp8")
+mesh = SubResource("BoxMesh_u5jub")
+
+[node name="EyesMeshInstance3D2" type="MeshInstance3D" parent="Visuals" unique_id=435473639]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.00770622, 0.485699, -0.525584)
+material_override = SubResource("StandardMaterial3D_bft63")
+material_overlay = SubResource("StandardMaterial3D_qmjp8")
+mesh = SubResource("BoxMesh_gojkq")
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=742450965]
+transform = Transform3D(1, 0, 0, 0, 0.8660249, 0.5, 0, -0.5, 0.8660249, 0, 0, 0)
+metadata/_edit_group_ = true
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig" unique_id=520480939]
+transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 28, 28)
+current = true
+fov = 35.0
+size = 30.0
+script = ExtResource("3_u5jub")
+snap = false
+snap_objects = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CameraRig" unique_id=1449258621]
+libraries/ = SubResource("AnimationLibrary_xckay")
+speed_scale = 0.25
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CameraRig" unique_id=769914533]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 39)
+visible = false
+mesh = SubResource("QuadMesh_u5jub")
+surface_material_override/0 = SubResource("ShaderMaterial_gojkq")
+
+[node name="StateMachine" type="Node" parent="." unique_id=582956530]
+script = ExtResource("3_8tv5p")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine" unique_id=710281353]
+script = ExtResource("4_ake5j")
+
+[node name="Walk" type="Node" parent="StateMachine" unique_id=384578279]
+script = ExtResource("5_0kfua")
+
+[node name="Run" type="Node" parent="StateMachine" unique_id=981385280]
+script = ExtResource("6_dvw8u")
+
+[node name="Fall" type="Node" parent="StateMachine" unique_id=231961931]
+script = ExtResource("7_mtmra")
+
+[node name="CarryObject" type="Node" parent="StateMachine" unique_id=1995180595]
+script = ExtResource("8_y2i3y")
+
+[node name="Attack" type="Node" parent="StateMachine" unique_id=1159105369]
+script = ExtResource("9_hrwt8")
+
+[node name="StatesTBD" type="Node" parent="." unique_id=363299790]
+
+[node name="Interact" type="Node" parent="StatesTBD" unique_id=142665882]
+
+[node name="DragObject" type="Node" parent="StatesTBD/Interact" unique_id=1787352424]
+
+[node name="Climb" type="Node" parent="StatesTBD" unique_id=716753611]
+
+[node name="Skill" type="Node" parent="StatesTBD" unique_id=525046746]
+
+[node name="Air" type="Node" parent="StatesTBD" unique_id=543278882]
+
+[node name="Jump" type="Node" parent="StatesTBD/Air" unique_id=1269690880]
+
+[node name="PickupArea3D" type="Area3D" parent="." unique_id=1276698787]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupArea3D" unique_id=1521615601]
+shape = SubResource("CylinderShape3D_u346t")
+
+[node name="FogVolume" type="FogVolume" parent="." unique_id=1815857435]
+visible = false
+size = Vector3(20, 20, 20)
+shape = 0
+material = SubResource("FogMaterial_totvf")
+
+[node name="SpringArmPivot" type="Node3D" parent="." unique_id=2107060944]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("9_neeau")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="SpringArmPivot" unique_id=845526082]
+spring_length = 6.0
+margin = -0.05
+
+[node name="SpringPosition" type="Node3D" parent="SpringArmPivot/SpringArm3D" unique_id=1809342718]
+
+[node name="Camera3D" type="Camera3D" parent="SpringArmPivot" unique_id=1892345778 node_paths=PackedStringArray("spring_arm")]
+attributes = SubResource("CameraAttributesPractical_nuhqq")
+current = true
+fov = 75.5
+script = ExtResource("10_nuhqq")
+spring_arm = NodePath("../SpringArm3D/SpringPosition")
+lerp_power = 4.0
+
+[node name="AttackArea3D" type="Area3D" parent="." unique_id=1777254822]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+monitoring = false
+monitorable = false
+
+[node name="FistCollisionShape3D" type="CollisionShape3D" parent="AttackArea3D" unique_id=677573597]
+shape = SubResource("CylinderShape3D_hrwt8")
+
+[connection signal="body_entered" from="PickupArea3D" to="." method="_on_pickup_area_3d_body_entered"]
+[connection signal="body_exited" from="PickupArea3D" to="." method="_on_pickup_area_3d_body_exited"]

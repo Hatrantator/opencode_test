@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="FoliageResource" format=3 uid="uid://r7gvdh4u1bwp"]
+
+[ext_resource type="ArrayMesh" uid="uid://cxku85jo8yeyc" path="res://TerrainBuildingTest/src/assets/3D/grass_blade.tres" id="1_u7geb"]
+[ext_resource type="Script" uid="uid://bvo1hmmpslrh" path="res://TerrainBuildingTest/src/resources/foliage_resource.gd" id="2_2nbtk"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("2_2nbtk")
+mesh_variants = Array[Mesh]([ExtResource("1_u7geb"), ExtResource("1_u7geb")])
+amount = 140000
+scale_ranges = PackedVector2Array(1, 1, 1, 1)
+cast_shadow = true
+allowed_biomes = PackedInt32Array(4)

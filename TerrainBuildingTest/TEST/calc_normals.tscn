@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://8fw64irarfog"]
+
+[ext_resource type="Shader" uid="uid://cpk6sqvqf2cgw" path="res://addons/gd_shader_lib/shaders/examples/calc_normals.gdshader" id="1_eodb0"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_swgo6"]
+noise_type = 3
+frequency = 0.003
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_vy4ax"]
+noise = SubResource("FastNoiseLite_swgo6")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xe5yo"]
+render_priority = 0
+shader = ExtResource("1_eodb0")
+shader_parameter/heightmap = SubResource("NoiseTexture2D_vy4ax")
+shader_parameter/heightmap_size = Vector2(512, 512)
+shader_parameter/height_scale = 51.545
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_25wb5"]
+material = SubResource("ShaderMaterial_xe5yo")
+size = Vector2(256, 256)
+subdivide_width = 511
+subdivide_depth = 511
+
+[node name="MeshInstance3D" type="MeshInstance3D" unique_id=1933306391]
+mesh = SubResource("PlaneMesh_25wb5")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1801656043]
+transform = Transform3D(-0.64040464, -0.6651402, 0.38401878, 2.7805946e-08, 0.49999994, 0.86602545, -0.7680377, 0.5546067, -0.3202023, 0, 0, 0)
+shadow_enabled = true

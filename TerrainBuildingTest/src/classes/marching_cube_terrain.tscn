@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bbbs40sg6q88q"]
+
+[ext_resource type="Script" uid="uid://dh8vqa83q6q8u" path="res://TerrainBuildingTest/src/classes/marching_cube_terrain.gd" id="1_pr35a"]
+[ext_resource type="Texture2D" uid="uid://dopnt7rnxmlqs" path="res://icon.png" id="2_nej8a"]
+
+[node name="MarchingCubeTerrain" type="MeshInstance3D" unique_id=557786140]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, -1, -32)
+script = ExtResource("1_pr35a")
+height = 8
+height_texture = ExtResource("2_nej8a")
+FLAT_SHADED = true
+metadata/_custom_type_script = "uid://dh8vqa83q6q8u"

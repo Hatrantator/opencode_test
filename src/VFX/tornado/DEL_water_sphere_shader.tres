@@ -1,0 +1,22 @@
+[gd_resource type="VisualShader" format=3 uid="uid://bdrbb1n3m5432"]
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, depth_test_default, cull_disabled, diffuse_lambert, specular_schlick_ggx, unshaded;
+
+
+// Varyings
+varying vec2 var_var_uv;
+
+
+
+
+void vertex() {
+	var_var_uv = vec2(0.0);
+}
+"
+modes/cull = 2
+flags/unshaded = true
+varyings/var_uv = "0,3"
+nodes/vertex/0/position = Vector2(1520, 120)
+nodes/fragment/0/position = Vector2(1280, 320)

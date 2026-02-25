@@ -1,0 +1,163 @@
+[gd_scene load_steps=23 format=3 uid="uid://uvwpt52eb6wf"]
+
+[ext_resource type="Material" uid="uid://g4bixvx48mbu" path="res://src/VFX/tornado/tornado_base_material.tres" id="1_d5hyt"]
+[ext_resource type="ArrayMesh" uid="uid://die663kdjbfrv" path="res://src/VFX/tornado/tornado_base.res" id="3_78g0m"]
+[ext_resource type="Material" uid="uid://d3jhakk75f5ux" path="res://src/VFX/tornado/tornado_material_base0.tres" id="3_oc6ad"]
+[ext_resource type="Material" uid="uid://b4cjatp4xtfqe" path="res://src/VFX/tornado/tornado_material_base1.tres" id="4_elsiv"]
+[ext_resource type="Material" uid="uid://b8sh40kpivope" path="res://src/VFX/tornado/tornado_wave_material_base0.tres" id="5_bbgox"]
+[ext_resource type="Material" uid="uid://dd2lj1meahs3r" path="res://src/VFX/tornado/tornado_wave_particle_material.tres" id="5_pmaeb"]
+[ext_resource type="ArrayMesh" uid="uid://cifwiglcq0633" path="res://src/VFX/tornado/tornado_wave.res" id="5_r1b4a"]
+[ext_resource type="Material" uid="uid://dv1bubuc8v42i" path="res://src/VFX/tornado/tornado_wave_material_base1.tres" id="8_bbgox"]
+
+[sub_resource type="Curve" id="Curve_d5hyt"]
+_limits = [0.0, 1.5, 0.0, 1.0]
+_data = [Vector2(0, 0.42987812), 0.0, 0.0, 0, 0, Vector2(1, 1.5), 1.1750729, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_8efku"]
+texture_mode = 1
+curve = SubResource("Curve_d5hyt")
+
+[sub_resource type="Gradient" id="Gradient_cw5de"]
+offsets = PackedFloat32Array(0.11594203, 0.5996377, 0.6467391)
+colors = PackedColorArray(0.023199666, 0.16222265, 0.22904304, 1, 0.23064908, 0.47435278, 0.60159045, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_kuidh"]
+gradient = SubResource("Gradient_cw5de")
+
+[sub_resource type="Curve" id="Curve_bbgox"]
+_data = [Vector2(0, 0.24695128), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_xffrr"]
+curve = SubResource("Curve_bbgox")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7j8vk"]
+resource_local_to_scene = true
+particle_flag_rotate_y = true
+angle_min = -179.99998
+angle_max = 180.00002
+direction = Vector3(0, -1, 0)
+angular_velocity_min = 359.99997
+angular_velocity_max = 499.99997
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 0.99999774
+radial_accel_max = 7.9999976
+scale_min = 1.5
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_xffrr")
+color_ramp = SubResource("GradientTexture1D_kuidh")
+alpha_curve = SubResource("CurveTexture_8efku")
+
+[sub_resource type="Curve" id="Curve_8efku"]
+_limits = [0.0, 1.5, 0.0, 1.0]
+_data = [Vector2(0, 0.42987812), 0.0, 0.0, 0, 0, Vector2(1, 1.5), 1.1750729, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_oc6ad"]
+texture_mode = 1
+curve = SubResource("Curve_8efku")
+
+[sub_resource type="Gradient" id="Gradient_8sihm"]
+offsets = PackedFloat32Array(0.04347826, 0.2536232, 0.682971)
+colors = PackedColorArray(0.10076111, 0.4057642, 0.4615096, 1, 0.28270745, 0.5383595, 0.5852304, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_i4c45"]
+gradient = SubResource("Gradient_8sihm")
+
+[sub_resource type="Curve" id="Curve_xffrr"]
+_data = [Vector2(0, 0.24793386), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_7j8vk"]
+curve = SubResource("Curve_xffrr")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_cw5de"]
+resource_local_to_scene = true
+particle_flag_rotate_y = true
+angle_min = -179.99998
+angle_max = 180.00002
+angular_velocity_min = 179.99998
+angular_velocity_max = 359.99997
+gravity = Vector3(0, 0, 0)
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_7j8vk")
+color_ramp = SubResource("GradientTexture1D_i4c45")
+alpha_curve = SubResource("CurveTexture_oc6ad")
+
+[node name="TornadoVFX" type="Node3D"]
+
+[node name="Base" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="TornadoBaseMesh" type="MeshInstance3D" parent="Base"]
+visible = false
+material_override = ExtResource("1_d5hyt")
+cast_shadow = 0
+mesh = ExtResource("3_78g0m")
+skeleton = NodePath("../..")
+
+[node name="TornadoBaseParticles" type="GPUParticles3D" parent="Base"]
+material_override = ExtResource("3_oc6ad")
+cast_shadow = 0
+amount = 12
+explosiveness = 0.15
+randomness = 1.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_7j8vk")
+draw_pass_1 = ExtResource("3_78g0m")
+
+[node name="TornadoBaseParticles2" type="GPUParticles3D" parent="Base"]
+material_override = ExtResource("4_elsiv")
+cast_shadow = 0
+amount = 12
+randomness = 1.0
+fixed_fps = 60
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_cw5de")
+draw_pass_1 = ExtResource("3_78g0m")
+
+[node name="Extra" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32703727, 0)
+
+[node name="WaveParticles" type="GPUParticles3D" parent="Extra"]
+material_override = ExtResource("5_bbgox")
+cast_shadow = 0
+amount = 12
+randomness = 1.0
+fixed_fps = 60
+process_material = ExtResource("5_pmaeb")
+draw_pass_1 = ExtResource("5_r1b4a")
+
+[node name="DustParticles" type="GPUParticles3D" parent="Extra"]
+material_override = ExtResource("8_bbgox")
+cast_shadow = 0
+amount = 12
+randomness = 1.0
+fixed_fps = 60
+process_material = ExtResource("5_pmaeb")
+draw_pass_1 = ExtResource("5_r1b4a")
+
+[node name="Flair" type="Node3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 4, 0)
+
+[node name="WaveParticles2" type="GPUParticles3D" parent="Flair"]
+material_override = ExtResource("5_bbgox")
+cast_shadow = 0
+amount = 12
+randomness = 1.0
+fixed_fps = 60
+local_coords = true
+process_material = ExtResource("5_pmaeb")
+draw_pass_1 = ExtResource("5_r1b4a")
+
+[node name="DustParticles2" type="GPUParticles3D" parent="Flair"]
+material_override = ExtResource("8_bbgox")
+cast_shadow = 0
+amount = 12
+randomness = 1.0
+fixed_fps = 60
+local_coords = true
+process_material = ExtResource("5_pmaeb")
+draw_pass_1 = ExtResource("5_r1b4a")

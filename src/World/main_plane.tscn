@@ -1,0 +1,135 @@
+[gd_scene load_steps=14 format=3 uid="uid://cf3tpp7b6fq2g"]
+
+[ext_resource type="Sky" uid="uid://clrlfo7n8gp5i" path="res://DEMO/VFX/std_sky.tres" id="1_q237i"]
+[ext_resource type="Script" uid="uid://cepueo2y7j527" path="res://src/World/WorldGen/plane_world_gen.gd" id="2_vrn45"]
+[ext_resource type="PackedScene" uid="uid://dw8d1qy7rn1mn" path="res://DEMO/VFX/godray.tscn" id="5_oq44u"]
+[ext_resource type="PackedScene" uid="uid://csohh0w6axalr" path="res://DEMO/Level/clouds_decal.tscn" id="6_b3lkh"]
+[ext_resource type="PackedScene" uid="uid://uravwb0j6tk" path="res://src/Player/player_3d.tscn" id="7_f3w60"]
+[ext_resource type="Script" uid="uid://bsk7k1m34ko35" path="res://DEMO/VFX/shell_texture.gd" id="9_tce06"]
+[ext_resource type="Script" uid="uid://dpysj7kg4cfgw" path="res://DEMO/Level/display.gd" id="10_obgy6"]
+
+[sub_resource type="Environment" id="Environment_3emec"]
+background_mode = 2
+sky = ExtResource("1_q237i")
+sdfgi_use_occlusion = true
+sdfgi_read_sky_light = false
+sdfgi_cascades = 2
+sdfgi_max_distance = 51.2
+sdfgi_y_scale = 2
+adjustment_enabled = true
+adjustment_saturation = 0.92
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_0u3d1"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_fiax2"]
+frequency = 0.0095
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ptsg0"]
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_fiax2")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_j5j45"]
+as_normal_map = true
+noise = SubResource("FastNoiseLite_fiax2")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_0u3d1"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, 0.409576, -0.286788, 0, 0.573576, 0.819152, 0.5, -0.709406, 0.496732, 0, 0, 0)
+light_energy = 0.3
+shadow_enabled = true
+shadow_normal_bias = 1.0
+shadow_blur = 0.05
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_3emec")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+size = Vector2i(640, 360)
+render_target_update_mode = 4
+
+[node name="World" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="WorldGen" type="Node3D" parent="SubViewportContainer/SubViewport/World" node_paths=PackedStringArray("player_character")]
+script = ExtResource("2_vrn45")
+player_character = NodePath("../Player3D")
+
+[node name="Partitions" type="Node3D" parent="SubViewportContainer/SubViewport/World/WorldGen"]
+
+[node name="Godray" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("5_oq44u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.06401, 0)
+visible = false
+
+[node name="Godray2" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("5_oq44u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.06401, 60.5805)
+visible = false
+
+[node name="Decal" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("6_b3lkh")]
+visible = false
+
+[node name="Player3D" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("7_f3w60")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 800, 20, 256)
+allow_process = false
+move_speed = 12.0
+angular_acceleration = 8
+jump_initial_impulse = 20.0
+
+[node name="TestNodes" type="Node3D" parent="SubViewportContainer/SubViewport/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/World/TestNodes"]
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_0u3d1")
+
+[node name="ShellTexture" type="Node" parent="SubViewportContainer/SubViewport/World/TestNodes/MeshInstance3D"]
+script = ExtResource("9_tce06")
+target_surfaces = Array[int]([0])
+lod_min_distance = 24.0
+lod_max_distance = 48.0
+length = 0.5
+density = 0.016
+seed = 4909
+scruffiness = 0.016
+turbulence_texture = SubResource("NoiseTexture2D_ptsg0")
+turbulence_strength = 0.271
+jitter_texture = SubResource("NoiseTexture2D_j5j45")
+albedo_color = Color(0.486275, 0.752941, 0.207843, 1)
+spring_constant = 10.0
+damping = 4.0
+stretch = 2.5
+stiffness = 0.1
+metadata/_custom_type_script = "uid://bsk7k1m34ko35"
+
+[node name="Display" type="Control" parent="." node_paths=PackedStringArray("viewport")]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("10_obgy6")
+viewport = NodePath("../SubViewportContainer/SubViewport")
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Display"]
+texture = SubResource("ViewportTexture_0u3d1")
+centered = false

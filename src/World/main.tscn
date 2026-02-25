@@ -1,0 +1,304 @@
+[gd_scene load_steps=25 format=3 uid="uid://c7j437kg3lulb"]
+
+[ext_resource type="Sky" uid="uid://clrlfo7n8gp5i" path="res://DEMO/VFX/std_sky.tres" id="1_ne47e"]
+[ext_resource type="Script" uid="uid://bjjn55es05idw" path="res://src/Environment/sun_light_3d.gd" id="1_q3pgc"]
+[ext_resource type="Script" uid="uid://bj0xd7oiu3ubf" path="res://src/World/WorldGen/grid_map_world_gen.gd" id="2_54dq0"]
+[ext_resource type="Texture2D" uid="uid://ca55h5qh4u1ef" path="res://Assets/2D/height_Out.png" id="3_1ssvs"]
+[ext_resource type="Texture2D" uid="uid://l3y1jwg1340v" path="res://Assets/2D/rocks_Out.png" id="4_pb2bs"]
+[ext_resource type="Resource" uid="uid://b1kyf8e1orm12" path="res://src/Resources/Sheets/world_config.tres" id="4_q3pgc"]
+[ext_resource type="Script" uid="uid://cdnk6hktrc4sj" path="res://src/World/Weather/weather_simulator.gd" id="6_3j51k"]
+[ext_resource type="PackedScene" uid="uid://uravwb0j6tk" path="res://src/Player/player_3d.tscn" id="7_1br5e"]
+[ext_resource type="Script" uid="uid://dpysj7kg4cfgw" path="res://DEMO/Level/display.gd" id="10_jtg85"]
+
+[sub_resource type="Environment" id="Environment_3emec"]
+background_mode = 2
+sky = ExtResource("1_ne47e")
+sdfgi_use_occlusion = true
+sdfgi_read_sky_light = false
+sdfgi_cascades = 2
+sdfgi_max_distance = 51.2
+sdfgi_y_scale = 2
+adjustment_enabled = true
+adjustment_saturation = 0.92
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_q3pgc"]
+frequency = 0.0086
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ne47e"]
+width = 1024
+height = 1024
+generate_mipmaps = false
+noise = SubResource("FastNoiseLite_q3pgc")
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_q3pgc"]
+blend_mode = 3
+
+[sub_resource type="Gradient" id="Gradient_ne47e"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.403403, 0.743744)
+colors = PackedColorArray(1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_54dq0"]
+noise_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1ssvs"]
+width = 1024
+height = 1024
+color_ramp = SubResource("Gradient_ne47e")
+noise = SubResource("FastNoiseLite_54dq0")
+
+[sub_resource type="Curve" id="Curve_q3pgc"]
+_data = [Vector2(0, 0.99334), 0.0, 0.0, 0, 0, Vector2(0.00527705, 0.500512), 0.0, 0.0, 0, 0, Vector2(0.986807, 0.500512), 0.0, 0.0, 0, 0, Vector2(0.992084, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_3j51k"]
+noise_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_q3pgc"]
+height = 1
+generate_mipmaps = false
+seamless = true
+noise = SubResource("FastNoiseLite_3j51k")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_0u3d1"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_q3pgc"]
+viewport_path = NodePath("SubViewportContainer/SubViewport/World/WorldGen/SubViewport")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3j51k"]
+bg_color = Color(1, 1, 0.784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q3pgc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_q3pgc"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.707107, -0.579228, 0.40558, 0, 0.573576, 0.819152, -0.707107, 0.579228, -0.40558, 0, 0, 0)
+light_color = Color(1, 1, 0.784314, 1)
+light_energy = 0.5
+shadow_enabled = true
+shadow_normal_bias = 1.0
+shadow_blur = 0.05
+script = ExtResource("1_q3pgc")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_3emec")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+size = Vector2i(640, 360)
+render_target_update_mode = 4
+
+[node name="World" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="WorldGen" type="Node3D" parent="SubViewportContainer/SubViewport/World" node_paths=PackedStringArray("player_character")]
+script = ExtResource("2_54dq0")
+debug = true
+player_character = NodePath("../Player3D")
+render_distance = 1
+config = ExtResource("4_q3pgc")
+heightmap = ExtResource("3_1ssvs")
+placementmap = ExtResource("4_pb2bs")
+chunk_max_height = 16
+
+[node name="Objects" type="Node3D" parent="SubViewportContainer/SubViewport/World/WorldGen"]
+
+[node name="Viewports" type="Node" parent="SubViewportContainer/SubViewport/World/WorldGen"]
+
+[node name="GroundMask" type="SubViewport" parent="SubViewportContainer/SubViewport/World/WorldGen/Viewports"]
+size = Vector2i(1024, 1024)
+render_target_update_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/World/WorldGen/Viewports/GroundMask"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("NoiseTexture2D_ne47e")
+
+[node name="TextureRect2" type="TextureRect" parent="SubViewportContainer/SubViewport/World/WorldGen/Viewports/GroundMask"]
+visible = false
+material = SubResource("CanvasItemMaterial_q3pgc")
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("NoiseTexture2D_1ssvs")
+
+[node name="Line2D" type="Line2D" parent="SubViewportContainer/SubViewport/World/WorldGen/Viewports/GroundMask"]
+points = PackedVector2Array(4, 4, 1024, 1024)
+width = 6.0
+width_curve = SubResource("Curve_q3pgc")
+default_color = Color(0.252028, 0.252028, 0.252028, 1)
+texture_mode = 1
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+
+[node name="WeatherSimulator" type="Node" parent="SubViewportContainer/SubViewport/World/WorldGen" node_paths=PackedStringArray("sun_directional_light")]
+script = ExtResource("6_3j51k")
+forecast_texture = SubResource("NoiseTexture2D_q3pgc")
+sun_directional_light = NodePath("../../../../../DirectionalLight3D")
+sun_intensity = 1.0
+godray_color_day = Color(1, 1, 0.196078, 1)
+godray_color_night = Color(1, 0.611765, 0.243137, 1)
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer/SubViewport/World/WorldGen"]
+size = Vector2i(384, 384)
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/World/WorldGen/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 96, 0)
+cull_mask = 1048063
+current = true
+fov = 85.0
+
+[node name="Player3D" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("7_1br5e")]
+allow_process = false
+move_speed = 48.0
+angular_acceleration = 8
+jump_initial_impulse = 30.0
+
+[node name="Display" type="Control" parent="." node_paths=PackedStringArray("viewport")]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("10_jtg85")
+viewport = NodePath("../SubViewportContainer/SubViewport")
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Display"]
+texture = SubResource("ViewportTexture_0u3d1")
+centered = false
+
+[node name="WeatherUI" type="Control" parent="Display"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Display/WeatherUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Seg1" type="Control" parent="Display/WeatherUI/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Display/WeatherUI/HBoxContainer/Seg1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="MapUI" type="Control" parent="Display/WeatherUI/HBoxContainer/Seg1/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Display/WeatherUI/HBoxContainer/Seg1/VBoxContainer/MapUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("ViewportTexture_q3pgc")
+
+[node name="Seg2" type="Control" parent="Display/WeatherUI/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Display/WeatherUI/HBoxContainer/Seg2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Seg3" type="Control" parent="Display/WeatherUI/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="Display/WeatherUI/HBoxContainer/Seg3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="DayProgressBar" type="ProgressBar" parent="Display/WeatherUI/HBoxContainer/Seg3/VBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+max_value = 1.0
+step = 0.005
+
+[node name="SunProgressBar" type="ProgressBar" parent="Display/WeatherUI/HBoxContainer/Seg3/VBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/fill = SubResource("StyleBoxFlat_3j51k")
+max_value = 1.0
+value = 0.5
+
+[node name="RayProgressBar" type="ProgressBar" parent="Display/WeatherUI/HBoxContainer/Seg3/VBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/fill = SubResource("StyleBoxFlat_q3pgc")
+max_value = 1.0
+value = 0.5
+
+[node name="CloudProgressBar" type="ProgressBar" parent="Display/WeatherUI/HBoxContainer/Seg3/VBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+max_value = 1.0
+value = 0.5
+
+[node name="PlayerPosLabel" type="Label" parent="Display"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+label_settings = SubResource("LabelSettings_q3pgc")
+horizontal_alignment = 1
+vertical_alignment = 1

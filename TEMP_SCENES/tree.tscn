@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dt8c04sg11bjt"]
+
+[ext_resource type="PackedScene" uid="uid://b58ih5r45akbg" path="res://TerrainBuildingTest/Assets/Tree.glb" id="1_cjnma"]
+[ext_resource type="ArrayMesh" uid="uid://b2a38fxpkgsa0" path="res://TerrainBuildingTest/src/assets/3D/tree_0.tres" id="2_v0o2b"]
+
+[node name="Tree" unique_id=974007689 instance=ExtResource("1_cjnma")]
+
+[node name="Tree_Generator" parent="." index="0" unique_id=930983960]
+mesh = ExtResource("2_v0o2b")

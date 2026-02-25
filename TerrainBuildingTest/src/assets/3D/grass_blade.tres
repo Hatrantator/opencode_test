@@ -1,0 +1,35 @@
+[gd_resource type="ArrayMesh" format=4 uid="uid://cxku85jo8yeyc"]
+
+[ext_resource type="Material" uid="uid://rowbllwxr1ix" path="res://TerrainBuildingTest/src/materials/grass_3D.tres" id="1_y1gsl"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_aa34v"]
+_surfaces = [{
+"aabb": AABB(-0.05, 0, 0, 0.1, 0.75, 1e-05),
+"format": 34359742465,
+"index_count": 27,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAADAAAABAAFAAMABgAFAAQABgAHAAUACAAHAAYACAAJAAcACgAJAAgA"),
+"name": "Plane",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 11,
+"vertex_data": PackedByteArray("2SS/PJqZGT8AAAAA2SS/vJqZGT8AAAAAAAAAAAAAQD8AAAAAsvILvWZm5j4AAAAAsvILPWZm5j4AAAAAexQuvZqZmT4AAAAAexQuPZqZmT4AAAAAXI9CvZqZGT4AAAAAXI9CPZqZGT4AAAAAzcxMvQAAAAAAAAAAzcxMPQAAAAAAAAAA")
+}]
+blend_shape_mode = 0
+
+[resource]
+resource_local_to_scene = true
+_surfaces = [{
+"aabb": AABB(-0.05, 0, 0, 0.1, 0.75, 1e-05),
+"attribute_data": PackedByteArray("AACAP83MTD4AAAAAzcxMPgAAAAAAAAAAAAAAAM3MzD4AAIA/zczMPgAAAACamRk/AACAP5qZGT8AAAAAzcxMPwAAgD/NzEw/AAAAAAAAgD8AAIA/AACAPw=="),
+"format": 34359742487,
+"index_count": 27,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAADAAAABAAFAAMABgAFAAQABgAHAAUACAAHAAYACAAJAAcACgAJAAgA"),
+"material": ExtResource("1_y1gsl"),
+"name": "Plane",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 11,
+"vertex_data": PackedByteArray("2SS/PJqZGT8AAAAA2SS/vJqZGT8AAAAAAAAAAAAAQD8AAAAAsvILvWZm5j4AAAAAsvILPWZm5j4AAAAAexQuvZqZmT4AAAAAexQuPZqZmT4AAAAAXI9CvZqZGT4AAAAAXI9CPZqZGT4AAAAAzcxMvQAAAAAAAAAAzcxMPQAAAAAAAAAA/3//f////7//f/9/////v/9//3////+//3//f////7//f/9/////v/9//3////+//3//f////7//f/9/////v/9//3////+//3//f////7//f/9/////vw==")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_aa34v")

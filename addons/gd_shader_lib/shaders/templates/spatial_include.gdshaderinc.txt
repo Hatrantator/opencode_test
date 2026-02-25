@@ -1,0 +1,11 @@
+// @name {{NAME}}
+// @category {{CATEGORY}}
+// @type Spatial
+// @description {{DESCRIPTION}}
+
+uniform vec3 {{PREFIX}}Source_color : source_color = vec3(1.0);
+uniform float {{PREFIX}}Strength : hint_range(0.0, 2.0) = 1.0;
+
+vec3 {{PREFIX}}Apply(vec3 color) {
+	return color * {{PREFIX}}Strength;
+}

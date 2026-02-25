@@ -1,0 +1,526 @@
+[gd_scene load_steps=26 format=3 uid="uid://dn6blywbhamwn"]
+
+[ext_resource type="Script" uid="uid://bjjn55es05idw" path="res://src/Environment/sun_light_3d.gd" id="1_46138"]
+[ext_resource type="Sky" uid="uid://clrlfo7n8gp5i" path="res://DEMO/VFX/std_sky.tres" id="2_vg2lx"]
+[ext_resource type="PackedScene" uid="uid://ddygajlkvmblk" path="res://src/World/WorldGen/PlaneGen/world_gen_sorted.tscn" id="3_h62ld"]
+[ext_resource type="Material" uid="uid://bqjeqggin6v5r" path="res://src/Resources/Materials/mmi_clipmap_material.tres" id="4_kn8fw"]
+[ext_resource type="Texture2D" uid="uid://bd0nhyia226t6" path="res://Assets/2D/Foliage-Flat/sprite_0013.png" id="5_1dt28"]
+[ext_resource type="QuadMesh" uid="uid://ty5cx37etqmd" path="res://src/Resources/CustomMeshes/godray_mesh.tres" id="5_46138"]
+[ext_resource type="Script" uid="uid://btkv22okxjxsf" path="res://src/World/WorldGen/world_sheet.gd" id="6_vg2lx"]
+[ext_resource type="PackedScene" uid="uid://bi3mccvb5acwu" path="res://src/World/WorldGen/PlaneGen/height_map_collision.tscn" id="8_1dt28"]
+[ext_resource type="Script" uid="uid://cdnk6hktrc4sj" path="res://src/World/Weather/weather_simulator.gd" id="8_46138"]
+[ext_resource type="PackedScene" uid="uid://uravwb0j6tk" path="res://src/Player/player_3d.tscn" id="8_aoxl4"]
+[ext_resource type="Script" uid="uid://dpysj7kg4cfgw" path="res://DEMO/Level/display.gd" id="9_q6i26"]
+[ext_resource type="Script" uid="uid://cg7lo85pq2rl6" path="res://src/UI/world_loading_screen.gd" id="10_vg2lx"]
+
+[sub_resource type="Environment" id="Environment_3emec"]
+background_mode = 2
+sky = ExtResource("2_vg2lx")
+sdfgi_use_occlusion = true
+sdfgi_read_sky_light = false
+sdfgi_cascades = 2
+sdfgi_max_distance = 51.2
+sdfgi_y_scale = 2
+adjustment_enabled = true
+adjustment_saturation = 0.92
+
+[sub_resource type="QuadMesh" id="QuadMesh_1dt28"]
+material = ExtResource("4_kn8fw")
+center_offset = Vector3(0, 0.5, 0)
+
+[sub_resource type="Shader" id="Shader_7sbee"]
+code = "shader_type spatial;
+
+render_mode cull_disabled, depth_draw_opaque;// vertex_lighting;
+
+#include \"res://src/Resources/Shader/custom_light.gdshaderinc\"
+#include \"res://src/Resources/Shader/weather.gdshaderinc\"
+#include \"res://src/Resources/Shader/world_texture_coord.gdshaderinc\"
+#include \"res://src/Resources/Shader/albedo_mask.gdshaderinc\"
+
+
+global uniform sampler2D height_map: repeat_disable;
+global uniform sampler2D normal_map: hint_normal;
+global uniform float height_amplitude;
+global uniform vec3 player_position;
+global uniform float world_partition_length;
+//global uniform float lod_step;
+uniform float lod_step = 1.0;
+
+//fragment shader:
+//albedo
+uniform float alpha_scissor = 0.99f;
+uniform vec4 albedo_0 : source_color = vec4(1.0f); //default color
+uniform vec4 albedo_1 : source_color = vec4(1.0f); //default color
+uniform bool use_albedo_mask = false;
+uniform sampler2D albedo_mask : hint_default_black; // this works as a global mask for the albedo color, stretched over all the gridmap
+uniform bool use_albedo_texture = true;
+uniform vec2 albedo_uv = vec2(1,1);
+uniform sampler2D albedo_texture_0 : hint_default_black;
+uniform sampler2D albedo_texture_1 : hint_default_black;
+//splatmaps
+global uniform bool use_splatmaps;
+global uniform sampler2D splat_r: hint_default_black, filter_nearest;
+global uniform sampler2D splat_g: hint_default_black, filter_nearest;
+global uniform sampler2D splat_b: hint_default_black, filter_nearest;
+global uniform sampler2D splat_k: hint_default_black, filter_nearest;
+uniform bool use_r = false;
+uniform bool use_g = false;
+uniform bool use_b = true;
+uniform bool use_k = false;
+
+//vertex shader:
+uniform bool use_billboard = false;
+uniform bool wind_sway = false;
+
+//light shader
+uniform bool clamp_diffuse_to_max = false;
+uniform bool use_attenuation = true;
+uniform int cuts : hint_range(1, 8) = 3;
+uniform float wrap : hint_range(-2.0f, 2.0f) = 0.17f;
+uniform float steepness : hint_range(1.0f, 8.0f) = 3.0f;
+
+uniform bool use_specular = false;
+uniform float specular_strength : hint_range(0.0f, 1.0f) = 1.0f;
+uniform float specular_shininess : hint_range(0.0f, 32.0f) = 16.0f;
+uniform sampler2D specular_map : hint_default_black;
+
+uniform bool use_rim = false;
+uniform float rim_width : hint_range(0.0f, 16.0f) = 8.0f;
+uniform vec4 rim_color : source_color = vec4(1.0f);
+
+uniform bool use_ramp = false;
+uniform sampler2D ramp : hint_default_black;
+
+uniform bool use_borders = false;
+uniform float border_width = 0.01f;
+
+//new variables
+varying vec3 node_pos;
+varying vec3 world_vertex;
+varying vec3 base_vertex;
+varying vec2 texture_position; //tracks texture xz position based on the global vertex position
+varying float cloud;
+
+float true_round(float value){
+	return floor(value + 0.5);
+}
+
+float get_height(vec3 vertex){
+	vec2 heightmap_position  = (world_vertex.xz)/float(textureSize(height_map,0).x) + 0.5;
+	return texture(height_map, heightmap_position ).r * height_amplitude;
+}
+
+void vertex(){
+	world_vertex = VERTEX + MODEL_MATRIX[3].xyz;
+	VERTEX.y += get_height(world_vertex);
+
+	vec3 clipmap_vertex = world_vertex - player_position;
+	float lod = true_round(max(abs(clipmap_vertex.x), abs(clipmap_vertex.z))/world_partition_length) * lod_step;
+
+	float subdivision_length = min(pow(2,lod), world_partition_length);
+
+	vec3 fraction = fract((VERTEX + world_partition_length / 2.0) / subdivision_length);
+
+	if (fraction.z == 0.5){
+		VERTEX.y = mix(
+			get_height(world_vertex - vec3(0, 0, fraction.z * subdivision_length)),
+			get_height(world_vertex + vec3(0, 0, (1.0-fraction.z) * subdivision_length)),
+			fraction.z
+		);
+	}
+
+    if (use_billboard) {
+		MODELVIEW_MATRIX = VIEW_MATRIX * mat4(
+				vec4(normalize(cross(vec3(0.0, 1.0, 0.0), MAIN_CAM_INV_VIEW_MATRIX[2].xyz)), 0.0),
+				vec4(0.0, 1.0, 0.0, 0.0),
+				vec4(normalize(cross(MAIN_CAM_INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0),
+				MODEL_MATRIX[3]);
+		MODELVIEW_NORMAL_MATRIX = mat3(MODELVIEW_MATRIX);
+
+		NORMAL = vec3(0.0, 1.0, 0.0);
+	}
+
+    if (wind_sway) {
+		vec2 wind_vertex =  get_wind_uv_vertex(NODE_POSITION_WORLD.xz, UV);
+		VERTEX.x += wind_vertex.x;
+		VERTEX.z += wind_vertex.y;
+	}
+
+	node_pos = NODE_POSITION_WORLD;
+	texture_position = get_texture_position(world_vertex, height_map);
+	texture_position = (world_vertex.xz)/float(textureSize(height_map,0).x)  + 0.5;
+	cloud = get_cloud_fragment_grid_map(world_vertex);
+}
+
+void fragment() {
+	//LIGHT_VERTEX.y = VERTEX.y;
+	//LIGHT_VERTEX = vec3(0.5,0.0,0.5);
+
+	// TODO: learn LIGHT_VERTEX
+	// Offset LIGHT_VERTEX to simulate shifted lighting
+	ALBEDO = texture(albedo_texture_0, UV).rgb * albedo_0.rgb;
+	ALPHA_SCISSOR_THRESHOLD = alpha_scissor;
+	ALPHA = get_alpha(node_pos,albedo_0.a * texture(albedo_texture_0, UV).a);
+
+	if (use_splatmaps) {
+		float splat_r_alpha = texture(splat_r, texture_position).r;
+		float splat_g_alpha = texture(splat_g, texture_position).r;
+		float splat_b_alpha = texture(splat_b, texture_position).r;
+		float splat_k_alpha = texture(splat_k, texture_position).r;
+
+		if (use_r) {
+			ALPHA *= splat_r_alpha;
+		}
+		if (use_g) {
+			ALPHA *= splat_g_alpha;
+		}
+		if (use_b) {
+			ALPHA *= splat_b_alpha;
+		}
+		if (use_k) {
+			ALPHA *= splat_k_alpha;
+		}
+	}
+
+}
+
+void light() {
+	// multiply directional light with the cloud texture - only affects sunlight
+	vec3 custom_light = LIGHT;
+	// Attenuation.
+	float attenuation = 1.0f;
+	if (use_attenuation) {
+		if (LIGHT_IS_DIRECTIONAL) { // DirectionalLight3D
+		//attenuation = ATTENUATION * (step(0.5, cloud));
+		attenuation = ATTENUATION * smoothstep(cloud_intensity, min(cloud_intensity + 0.15, 1.0), cloud);
+		}
+		else {
+			attenuation = ATTENUATION;
+		}
+	}
+
+	// Diffuse lighting.
+	float NdotL = dot(NORMAL, custom_light);
+	float diffuse_amount = NdotL + (attenuation - 1.0) + wrap;
+
+	diffuse_amount *= steepness;
+	float cuts_inv = 1.0f / float(cuts);
+	float diffuse_stepped = clamp(diffuse_amount + mod(1.0f - diffuse_amount, cuts_inv), 0.0f, 1.0f);
+
+	// Calculate borders.
+	float border = 0.0f;
+	if (use_borders) {
+		float corr_border_width = length(cross(NORMAL, custom_light)) * border_width * steepness;
+		border = step(diffuse_stepped - corr_border_width, diffuse_amount)
+				 - step(1.0 - corr_border_width, diffuse_amount);
+	}
+
+	// Apply diffuse result to different styles.
+	vec3 diffuse = ALBEDO.rgb * LIGHT_COLOR / PI;
+	if (use_ramp) {
+		diffuse *= texture(ramp, vec2(diffuse_stepped * (1.0f - border), 0.0f)).rgb;
+	} else {
+		diffuse *= diffuse_stepped * (1.0f - border);
+	}
+
+	if (clamp_diffuse_to_max) {
+		// Clamp diffuse to max for multiple light sources.
+		DIFFUSE_LIGHT = max(DIFFUSE_LIGHT, diffuse);
+	} else {
+		DIFFUSE_LIGHT += diffuse;
+	}
+
+	// Specular lighting.
+	if (use_specular) {
+		vec3 H = normalize(LIGHT + VIEW);
+		float NdotH = dot(NORMAL, H);
+		float specular_amount = max(pow(NdotH, specular_shininess*specular_shininess), 0.0f)
+							    * texture(specular_map, UV).r
+								* attenuation;
+		specular_amount = split_specular(specular_amount);
+		SPECULAR_LIGHT += specular_strength * specular_amount * LIGHT_COLOR;
+	}
+
+	// Simple rim lighting.
+	if (use_rim) {
+		float NdotV = dot(NORMAL, VIEW);
+		float rim_light = pow(1.0 - NdotV, rim_width);
+		DIFFUSE_LIGHT += rim_light * rim_color.rgb * rim_color.a * LIGHT_COLOR / PI;
+	}
+
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6iemj"]
+render_priority = 0
+shader = SubResource("Shader_7sbee")
+shader_parameter/smoothed_wind_direction = Vector2(0, 0)
+shader_parameter/smoothed_wind_speed = 0.5
+shader_parameter/use_greyscale = true
+shader_parameter/secondary_albedo = Color(1, 0.5, 0.5, 1)
+shader_parameter/tertiary_albedo = Color(0.701961, 1, 0.501961, 1)
+shader_parameter/quarternary_albedo = Color(0.5, 0.5, 1, 1)
+shader_parameter/lod_step = 1.0
+shader_parameter/alpha_scissor = 0.99
+shader_parameter/albedo_0 = Color(0.47451, 0.827451, 0.466667, 1)
+shader_parameter/albedo_1 = Color(1, 1, 1, 1)
+shader_parameter/use_albedo_mask = false
+shader_parameter/use_albedo_texture = true
+shader_parameter/albedo_uv = Vector2(1, 1)
+shader_parameter/albedo_texture_0 = ExtResource("5_1dt28")
+shader_parameter/use_r = false
+shader_parameter/use_g = false
+shader_parameter/use_b = true
+shader_parameter/use_k = false
+shader_parameter/use_billboard = true
+shader_parameter/wind_sway = true
+shader_parameter/clamp_diffuse_to_max = false
+shader_parameter/use_attenuation = true
+shader_parameter/cuts = 3
+shader_parameter/wrap = 0.17
+shader_parameter/steepness = 3.0
+shader_parameter/use_specular = false
+shader_parameter/specular_strength = 1.0
+shader_parameter/specular_shininess = 16.0
+shader_parameter/use_rim = false
+shader_parameter/rim_width = 8.0
+shader_parameter/rim_color = Color(1, 1, 1, 1)
+shader_parameter/use_ramp = false
+shader_parameter/use_borders = false
+shader_parameter/border_width = 0.01
+
+[sub_resource type="QuadMesh" id="QuadMesh_j0hed"]
+material = SubResource("ShaderMaterial_6iemj")
+size = Vector2(2, 1)
+center_offset = Vector3(0, 0.5, 0)
+
+[sub_resource type="Resource" id="Resource_kn8fw"]
+script = ExtResource("6_vg2lx")
+placementmaps = Array[Texture]([])
+interactible_objects = Array[String](["res://DEMO/Level/custom_multi_mesh_instance_3d.tscn"])
+grass_mesh_array = Array[Mesh]([SubResource("QuadMesh_1dt28"), SubResource("QuadMesh_j0hed")])
+lightray_mesh = ExtResource("5_46138")
+placement_mesh_libs = Array[MeshLibrary]([])
+metadata/_custom_type_script = "uid://btkv22okxjxsf"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_vg2lx"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_kn8fw"]
+height = 1
+generate_mipmaps = false
+noise = SubResource("FastNoiseLite_vg2lx")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_0u3d1"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_q3pgc"]
+viewport_path = NodePath("SubViewportContainer/SubViewport/WorldGen/SubViewport")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3j51k"]
+bg_color = Color(1, 1, 0.784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q3pgc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_q3pgc"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.707107, -0.579228, 0.40558, 0, 0.573576, 0.819152, -0.707107, 0.579228, -0.40558, 0, 0, 0)
+light_color = Color(1, 1, 0.784314, 1)
+light_energy = 0.5
+shadow_enabled = true
+shadow_normal_bias = 1.0
+shadow_blur = 0.05
+script = ExtResource("1_46138")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_3emec")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+size = Vector2i(640, 360)
+render_target_update_mode = 4
+
+[node name="WorldGen" parent="SubViewportContainer/SubViewport" node_paths=PackedStringArray("player_character") instance=ExtResource("3_h62ld")]
+player_character = NodePath("Player3D")
+config_file = SubResource("Resource_kn8fw")
+render_distance = 1
+
+[node name="HeightMapCollision" parent="SubViewportContainer/SubViewport/WorldGen/World" index="0" instance=ExtResource("8_1dt28")]
+
+[node name="Player3D" parent="SubViewportContainer/SubViewport/WorldGen" instance=ExtResource("8_aoxl4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+move_speed = 12.0
+jump_initial_impulse = 25.0
+
+[node name="WeatherSimulator" type="Node" parent="SubViewportContainer/SubViewport/WorldGen" node_paths=PackedStringArray("sun_directional_light")]
+script = ExtResource("8_46138")
+debug = true
+debug_speed = 8.0
+forecast_texture = SubResource("NoiseTexture2D_kn8fw")
+sun_directional_light = NodePath("../../../../DirectionalLight3D")
+sun_intensity = 0.45
+metadata/_custom_type_script = "uid://cdnk6hktrc4sj"
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer/SubViewport/WorldGen"]
+transparent_bg = true
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/WorldGen/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 512, 0)
+
+[node name="Display" type="Control" parent="." node_paths=PackedStringArray("viewport")]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("9_q6i26")
+viewport = NodePath("../SubViewportContainer/SubViewport")
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Display"]
+visible = false
+texture_filter = 1
+texture = SubResource("ViewportTexture_0u3d1")
+centered = false
+
+[node name="WeatherUI" type="Control" parent="Display"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Display/WeatherUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Seg1" type="Control" parent="Display/WeatherUI/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Display/WeatherUI/HBoxContainer/Seg1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="MapUI" type="Control" parent="Display/WeatherUI/HBoxContainer/Seg1/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Display/WeatherUI/HBoxContainer/Seg1/VBoxContainer/MapUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("ViewportTexture_q3pgc")
+
+[node name="Seg2" type="Control" parent="Display/WeatherUI/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Display/WeatherUI/HBoxContainer/Seg2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Seg3" type="Control" parent="Display/WeatherUI/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="Display/WeatherUI/HBoxContainer/Seg3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="DayProgressBar" type="ProgressBar" parent="Display/WeatherUI/HBoxContainer/Seg3/VBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+max_value = 1.0
+step = 0.005
+
+[node name="SunProgressBar" type="ProgressBar" parent="Display/WeatherUI/HBoxContainer/Seg3/VBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/fill = SubResource("StyleBoxFlat_3j51k")
+max_value = 1.0
+value = 0.5
+
+[node name="RayProgressBar" type="ProgressBar" parent="Display/WeatherUI/HBoxContainer/Seg3/VBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/fill = SubResource("StyleBoxFlat_q3pgc")
+max_value = 1.0
+value = 0.5
+
+[node name="CloudProgressBar" type="ProgressBar" parent="Display/WeatherUI/HBoxContainer/Seg3/VBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+max_value = 1.0
+value = 0.5
+
+[node name="PlayerPosLabel" type="Label" parent="Display"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 32)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+label_settings = SubResource("LabelSettings_q3pgc")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WorldLoadingScreen" type="Control" parent="Display"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("10_vg2lx")
+
+[editable path="SubViewportContainer/SubViewport/WorldGen"]

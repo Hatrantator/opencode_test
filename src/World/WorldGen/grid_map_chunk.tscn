@@ -1,0 +1,50 @@
+[gd_scene load_steps=9 format=3 uid="uid://b6tbrd6e5qy2"]
+
+[ext_resource type="Script" uid="uid://k185ley8vtad" path="res://src/World/WorldGen/grid_map_chunk.gd" id="1_ivhpn"]
+[ext_resource type="MeshLibrary" uid="uid://c7uquao6umjpr" path="res://src/Resources/MeshLibs/ground-tiles.tres" id="2_du30m"]
+[ext_resource type="PackedScene" uid="uid://cd81xaf3e5p5b" path="res://src/World/WorldGen/PlaneGen/water_chunk.tscn" id="7_fi0nt"]
+[ext_resource type="Material" uid="uid://ovjex6osvoqx" path="res://src/Resources/Materials/godray_particle_material.tres" id="7_tu1xj"]
+[ext_resource type="Material" uid="uid://hyp6umivqy36" path="res://src/Resources/Materials/godray_mesh_material.tres" id="8_0gyd2"]
+[ext_resource type="PackedScene" uid="uid://bfwhluyfrosnn" path="res://src/VFX/rain_particles_3d.tscn" id="9_0gyd2"]
+[ext_resource type="Script" uid="uid://dfjd56jxf4tk3" path="res://src/VFX/godray_particles_3d.gd" id="9_md633"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_tu1xj"]
+size = Vector2(4, 128)
+center_offset = Vector3(0, 60, 0)
+
+[node name="GridMapChunk" type="Node3D"]
+script = ExtResource("1_ivhpn")
+
+[node name="GroundGridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("2_du30m")
+cell_size = Vector3(2, 1, 2)
+
+[node name="ObjectGridMaps" type="Node3D" parent="."]
+
+[node name="GodrayParticles3D" type="GPUParticles3D" parent="." groups=["SUN"]]
+visible = false
+layers = 512
+sorting_use_aabb_center = false
+material_override = ExtResource("8_0gyd2")
+cast_shadow = 0
+extra_cull_margin = 128.0
+amount = 512
+lifetime = 999.0
+explosiveness = 1.0
+randomness = 1.0
+visibility_aabb = AABB(-32, -32, -32, 64, 64, 64)
+draw_order = 3
+process_material = ExtResource("7_tu1xj")
+draw_pass_1 = SubResource("QuadMesh_tu1xj")
+script = ExtResource("9_md633")
+
+[node name="RainParticles3D" parent="." instance=ExtResource("9_0gyd2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 40, 0)
+layers = 512
+sorting_use_aabb_center = false
+visibility_aabb = AABB(-32, -64, -32, 64, 128, 64)
+
+[node name="MeshInstance3D" parent="." instance=ExtResource("7_fi0nt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28, 0)
+
+[node name="InteractableObjects" type="Node3D" parent="."]

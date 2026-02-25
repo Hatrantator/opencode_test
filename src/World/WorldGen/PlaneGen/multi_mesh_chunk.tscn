@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0yur2sp03spu"]
+
+[ext_resource type="Script" uid="uid://6fm5rm8r5ui6" path="res://src/World/WorldGen/PlaneGen/multi_mesh_chunk.gd" id="1_vgrx1"]
+
+[node name="MultiMeshChunk" type="MultiMeshInstance3D"]
+cast_shadow = 0
+extra_cull_margin = 512.0
+script = ExtResource("1_vgrx1")

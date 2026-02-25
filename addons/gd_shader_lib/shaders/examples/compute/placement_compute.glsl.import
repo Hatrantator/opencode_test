@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://bq1qkx74excmx"
+path="res://.godot/imported/placement_compute.glsl-6e541ce8ade727a3d46aec99ec645f7d.res"
+
+[deps]
+
+source_file="res://addons/gd_shader_lib/shaders/examples/compute/placement_compute.glsl"
+dest_files=["res://.godot/imported/placement_compute.glsl-6e541ce8ade727a3d46aec99ec645f7d.res"]
+
+[params]
+

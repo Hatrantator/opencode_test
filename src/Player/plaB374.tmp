@@ -1,0 +1,92 @@
+[gd_scene load_steps=12 format=3 uid="uid://uravwb0j6tk"]
+
+[ext_resource type="Script" path="res://DEMO/Player/src/player_3d.gd" id="1_1mqkk"]
+[ext_resource type="Texture2D" uid="uid://dho65wksiqwrs" path="res://icon.svg" id="2_xkypt"]
+[ext_resource type="Script" path="res://DEMO/Player/src/StateMachine/state_machine.gd" id="3_8tv5p"]
+[ext_resource type="Script" path="res://DEMO/Player/src/StateMachine/player_state_idle.gd" id="4_ake5j"]
+[ext_resource type="Script" path="res://DEMO/Player/src/StateMachine/player_state_walk.gd" id="5_0kfua"]
+[ext_resource type="Script" path="res://DEMO/Player/src/StateMachine/player_state_run.gd" id="6_dvw8u"]
+[ext_resource type="Script" path="res://DEMO/Player/src/StateMachine/player_state_fall.gd" id="7_mtmra"]
+[ext_resource type="Script" path="res://DEMO/Player/src/StateMachine/player_state_carryobject.gd" id="8_y2i3y"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dnnha"]
+height = 1.25
+
+[sub_resource type="BoxMesh" id="BoxMesh_otj3q"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_u346t"]
+height = 1.0
+radius = 1.5
+
+[node name="Player3D" type="CharacterBody3D"]
+script = ExtResource("1_1mqkk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_dnnha")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="Visuals"]
+visible = false
+
+[node name="Sprite3D" type="Sprite3D" parent="Visuals"]
+billboard = 2
+alpha_cut = 2
+texture = ExtResource("2_xkypt")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.748956, 0.66262, 0, -0.66262, 0.748956, 0, 8, 8)
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("3_8tv5p")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("4_ake5j")
+
+[node name="Walk" type="Node" parent="StateMachine"]
+script = ExtResource("5_0kfua")
+
+[node name="Run" type="Node" parent="StateMachine"]
+script = ExtResource("6_dvw8u")
+
+[node name="Fall" type="Node" parent="StateMachine"]
+script = ExtResource("7_mtmra")
+
+[node name="CarryObject" type="Node" parent="StateMachine"]
+script = ExtResource("8_y2i3y")
+
+[node name="StatesTBD" type="Node" parent="."]
+
+[node name="Interact" type="Node" parent="StatesTBD"]
+
+[node name="DragObject" type="Node" parent="StatesTBD/Interact"]
+
+[node name="Climb" type="Node" parent="StatesTBD"]
+
+[node name="Skill" type="Node" parent="StatesTBD"]
+
+[node name="Air" type="Node" parent="StatesTBD"]
+
+[node name="Jump" type="Node" parent="StatesTBD/Air"]
+
+[node name="Pivots" type="Node3D" parent="."]
+
+[node name="PlayerFrontPivot" type="Marker3D" parent="Pivots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="CarryObjectPivot" type="Marker3D" parent="Pivots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pivots/CarryObjectPivot"]
+mesh = SubResource("BoxMesh_otj3q")
+skeleton = NodePath("../../PlayerFrontPivot")
+
+[node name="PickupArea3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupArea3D"]
+shape = SubResource("CylinderShape3D_u346t")
+
+[connection signal="body_entered" from="PickupArea3D" to="." method="_on_pickup_area_3d_body_entered"]
+[connection signal="body_exited" from="PickupArea3D" to="." method="_on_pickup_area_3d_body_exited"]

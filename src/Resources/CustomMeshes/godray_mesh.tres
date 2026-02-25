@@ -1,0 +1,8 @@
+[gd_resource type="QuadMesh" load_steps=2 format=3 uid="uid://ty5cx37etqmd"]
+
+[ext_resource type="Material" uid="uid://hyp6umivqy36" path="res://src/Resources/Materials/godray_mesh_material.tres" id="1_l0urd"]
+
+[resource]
+material = ExtResource("1_l0urd")
+size = Vector2(2, 80)
+center_offset = Vector3(0, -32, 0)

@@ -1,0 +1,74 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dydhi5invu2h4"]
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_q1aus"]
+parameter_name = "base_texture"
+texture_repeat = 1
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_l2tfe"]
+expanded_output_ports = [0]
+source = 5
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_yyp21"]
+expanded_output_ports = [0]
+input_name = "color"
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_ca381"]
+parameter_name = "gradient_texture"
+texture_repeat = 1
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_mmmjd"]
+output_port_for_preview = 1
+expanded_output_ports = [0]
+source = 5
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_867t4"]
+operator = 1
+
+[sub_resource type="VisualShader" id="VisualShader_k5lmm"]
+modes/cull = 2
+flags/unshaded = true
+nodes/fragment/0/position = Vector2(920, 0)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DParameter_q1aus")
+nodes/fragment/2/position = Vector2(-460, 660)
+nodes/fragment/3/node = SubResource("VisualShaderNodeTexture_l2tfe")
+nodes/fragment/3/position = Vector2(-80, 700)
+nodes/fragment/4/node = SubResource("VisualShaderNodeInput_yyp21")
+nodes/fragment/4/position = Vector2(-40, -20)
+nodes/fragment/5/node = SubResource("VisualShaderNodeTexture2DParameter_ca381")
+nodes/fragment/5/position = Vector2(-920, 280)
+nodes/fragment/6/node = SubResource("VisualShaderNodeTexture_mmmjd")
+nodes/fragment/6/position = Vector2(-560, 200)
+nodes/fragment/7/node = SubResource("VisualShaderNodeFloatOp_867t4")
+nodes/fragment/7/position = Vector2(415.8606, 551.1691)
+nodes/fragment/connections = PackedInt32Array(2, 0, 3, 2, 4, 0, 0, 0, 4, 4, 0, 19, 5, 0, 6, 2, 3, 1, 7, 0, 6, 1, 7, 1, 7, 0, 0, 1)
+
+[sub_resource type="Gradient" id="Gradient_q1aus"]
+offsets = PackedFloat32Array(0, 0.8370607, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.8346143, 0.8346143, 0.8346143, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_l2tfe"]
+noise_type = 2
+seed = 1
+frequency = 0.0114
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yyp21"]
+width = 1024
+height = 1024
+noise = SubResource("FastNoiseLite_l2tfe")
+color_ramp = SubResource("Gradient_q1aus")
+seamless = true
+in_3d_space = true
+
+[sub_resource type="Gradient" id="Gradient_4lkic"]
+offsets = PackedFloat32Array(0, 0.9964539)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_u11bo"]
+gradient = SubResource("Gradient_4lkic")
+fill_from = Vector2(1, 0.102564104)
+
+[resource]
+render_priority = 0
+shader = SubResource("VisualShader_k5lmm")
+shader_parameter/base_texture = SubResource("NoiseTexture2D_yyp21")
+shader_parameter/gradient_texture = SubResource("GradientTexture2D_u11bo")

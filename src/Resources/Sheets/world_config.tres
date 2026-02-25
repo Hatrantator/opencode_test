@@ -1,0 +1,103 @@
+[gd_resource type="Resource" script_class="WorldSheet" load_steps=16 format=3 uid="uid://b1kyf8e1orm12"]
+
+[ext_resource type="QuadMesh" uid="uid://dhtgbqkkd2t1v" path="res://src/Resources/CustomMeshes/grass_mesh_0.tres" id="1_jdirm"]
+[ext_resource type="Shader" uid="uid://utwunq07f6gf" path="res://src/Resources/Shader/gridmap_ground.gdshader" id="2_k7k3l"]
+[ext_resource type="Texture2D" uid="uid://cjo6msoi6170b" path="res://Assets/2D/Foliage-Flat/sprite_0004.png" id="3_k06l3"]
+[ext_resource type="Texture2D" uid="uid://bd0nhyia226t6" path="res://Assets/2D/Foliage-Flat/sprite_0013.png" id="4_g51om"]
+[ext_resource type="Texture2D" uid="uid://ca55h5qh4u1ef" path="res://Assets/2D/height_Out.png" id="4_jbk8f"]
+[ext_resource type="QuadMesh" uid="uid://ty5cx37etqmd" path="res://src/Resources/CustomMeshes/godray_mesh.tres" id="5_g51om"]
+[ext_resource type="Texture2D" uid="uid://l3y1jwg1340v" path="res://Assets/2D/rocks_Out.png" id="6_yt52b"]
+[ext_resource type="MeshLibrary" uid="uid://dn8afkh600sa5" path="res://src/Resources/MeshLibs/ruin_tiles.tres" id="7_jbk8f"]
+[ext_resource type="Texture2D" uid="uid://rucm2q425boh" path="res://Assets/2D/trees_Out.png" id="7_lf2je"]
+[ext_resource type="MeshLibrary" uid="uid://b1bmcs038jweh" path="res://src/Resources/MeshLibs/tree_tiles.tres" id="8_g51om"]
+[ext_resource type="Script" uid="uid://btkv22okxjxsf" path="res://src/World/WorldGen/world_sheet.gd" id="8_qi4gt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sicrb"]
+render_priority = 0
+shader = ExtResource("2_k7k3l")
+shader_parameter/smoothed_wind_direction = Vector2(0, 0)
+shader_parameter/smoothed_wind_speed = 0.0
+shader_parameter/use_greyscale = true
+shader_parameter/secondary_albedo = Color(0, 0, 0, 1)
+shader_parameter/tertiary_albedo = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/quarternary_albedo = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/albedo = Color(0.463985, 0.813836, 0.456385, 1)
+shader_parameter/use_albedo_mask = false
+shader_parameter/use_albedo_texture = false
+shader_parameter/albedo_texture_1 = ExtResource("3_k06l3")
+shader_parameter/use_normal = false
+shader_parameter/alpha_scissor = 0.99
+shader_parameter/backlight_color = Color(1, 1, 1, 1)
+shader_parameter/backlight_amount = 0.0
+shader_parameter/use_billboard = true
+shader_parameter/wind_sway = true
+shader_parameter/use_multimesh = false
+shader_parameter/clamp_diffuse_to_max = false
+shader_parameter/use_attenuation = true
+shader_parameter/cuts = 3
+shader_parameter/wrap = 0.17
+shader_parameter/steepness = 3.0
+shader_parameter/use_specular = false
+shader_parameter/specular_strength = 1.0
+shader_parameter/specular_shininess = 16.0
+shader_parameter/use_rim = false
+shader_parameter/rim_width = 8.0
+shader_parameter/rim_color = Color(1, 1, 1, 1)
+shader_parameter/use_ramp = false
+shader_parameter/use_borders = false
+shader_parameter/border_width = 0.01
+
+[sub_resource type="QuadMesh" id="QuadMesh_jtg85"]
+material = SubResource("ShaderMaterial_sicrb")
+size = Vector2(2, 2)
+center_offset = Vector3(0, 0.5, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k06l3"]
+render_priority = 0
+shader = ExtResource("2_k7k3l")
+shader_parameter/smoothed_wind_direction = Vector2(0, 0)
+shader_parameter/smoothed_wind_speed = 0.0
+shader_parameter/use_greyscale = true
+shader_parameter/secondary_albedo = Color(0, 0, 0, 1)
+shader_parameter/tertiary_albedo = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/quarternary_albedo = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/albedo = Color(0.47451, 0.827451, 0.466667, 1)
+shader_parameter/use_albedo_mask = false
+shader_parameter/use_albedo_texture = false
+shader_parameter/albedo_texture_1 = ExtResource("4_g51om")
+shader_parameter/use_normal = false
+shader_parameter/alpha_scissor = 0.98
+shader_parameter/backlight_color = Color(1, 1, 1, 1)
+shader_parameter/backlight_amount = 0.0
+shader_parameter/use_billboard = true
+shader_parameter/wind_sway = true
+shader_parameter/use_multimesh = false
+shader_parameter/clamp_diffuse_to_max = false
+shader_parameter/use_attenuation = true
+shader_parameter/cuts = 3
+shader_parameter/wrap = 0.17
+shader_parameter/steepness = 3.0
+shader_parameter/use_specular = false
+shader_parameter/specular_strength = 1.0
+shader_parameter/specular_shininess = 16.0
+shader_parameter/use_rim = false
+shader_parameter/rim_width = 8.0
+shader_parameter/rim_color = Color(1, 1, 1, 1)
+shader_parameter/use_ramp = false
+shader_parameter/use_borders = false
+shader_parameter/border_width = 0.01
+
+[sub_resource type="QuadMesh" id="QuadMesh_jbk8f"]
+material = SubResource("ShaderMaterial_k06l3")
+size = Vector2(2, 2)
+center_offset = Vector3(0, 0.5, 0)
+
+[resource]
+script = ExtResource("8_qi4gt")
+heightmap = ExtResource("4_jbk8f")
+placementmaps = Array[Texture]([ExtResource("6_yt52b"), ExtResource("7_lf2je")])
+interactible_objects = Array[String]([])
+grass_mesh_array = Array[Mesh]([ExtResource("1_jdirm"), SubResource("QuadMesh_jtg85"), SubResource("QuadMesh_jbk8f")])
+lightray_mesh = ExtResource("5_g51om")
+placement_mesh_libs = Array[MeshLibrary]([ExtResource("7_jbk8f"), ExtResource("8_g51om")])
+metadata/_custom_type_script = "uid://btkv22okxjxsf"

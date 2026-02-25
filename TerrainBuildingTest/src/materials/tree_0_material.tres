@@ -1,0 +1,49 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://jxq4ottsa007"]
+
+[ext_resource type="Shader" uid="uid://dry5kugmy87co" path="res://addons/gd_shader_lib/shaders/examples/leaf_tree.gdshader" id="1_jiois"]
+[ext_resource type="Texture2D" uid="uid://ceyay7783ysga" path="res://TerrainBuildingTest/Assets/Tree_T_Canopy_01.png" id="2_7q4r4"]
+
+[sub_resource type="Gradient" id="Gradient_jiois"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.8, 1)
+colors = PackedColorArray(0.95000005, 1, 0, 1, 1.8770993e-06, 0.45468545, 0.43548596, 1, 0, 0.57895035, 0.18351632, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7q4r4"]
+noise_type = 2
+frequency = 0.0295
+fractal_type = 0
+cellular_return_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_87b08"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_7q4r4")
+color_ramp = SubResource("Gradient_jiois")
+invert = true
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_jiois")
+shader_parameter/fresnelAmount = 0.13600010146000008
+shader_parameter/fresnelStrength = 0.13600010146000008
+shader_parameter/fresnelBlend = 1.0
+shader_parameter/fresnelColor = Color(0.58, 0.65, 0.33, 1)
+shader_parameter/hueMaskTexture = SubResource("NoiseTexture2D_87b08")
+shader_parameter/hueMaskScale = 64.0
+shader_parameter/vMaskThreshold = 0.5
+shader_parameter/vMaskScale = 64.0
+shader_parameter/leaf_albedo_tex = ExtResource("2_7q4r4")
+shader_parameter/uv_scale = Vector2(1, 1)
+shader_parameter/leaf_albedo_color = Color(1, 1, 1, 1)
+shader_parameter/scissor_threshold = 0.50000002375
+shader_parameter/gradient_low_color = Color(0.1, 0.4, 0.16000001, 1)
+shader_parameter/gradient_high_color = Color(0.6, 0.8, 0.2, 1)
+shader_parameter/height_intensity = 1.0
+shader_parameter/gradient_min_y = 8.0
+shader_parameter/gradient_max_y = 21.0
+shader_parameter/wind_strength = 0.1
+shader_parameter/wind_speed = 2.0
+shader_parameter/wind_direction = Vector2(1, 0)
+shader_parameter/transmission_color = Color(0.4, 0.8, 0.3, 1)
+shader_parameter/transmission_strength = 1.50000007125
+shader_parameter/transmission_power = 2.00000009174012

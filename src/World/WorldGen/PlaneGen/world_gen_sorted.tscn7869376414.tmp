@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3 uid="uid://ddygajlkvmblk"]
+
+[ext_resource type="Script" uid="uid://btd65br56bjtb" path="res://src/World/WorldGen/PlaneGen/world_gen_sorted.gd" id="1_mflap"]
+[ext_resource type="Script" uid="uid://bddnsb2trx4u8" path="res://src/World/WorldGen/PlaneGen/world.gd" id="2_ivodg"]
+[ext_resource type="Script" uid="uid://crb42j80xc163" path="res://src/World/WorldGen/PlaneGen/ground_meshes.gd" id="3_edahp"]
+[ext_resource type="Script" uid="uid://wley58ut0wnj" path="res://src/World/WorldGen/PlaneGen/water_meshes.gd" id="4_2xqax"]
+[ext_resource type="Script" uid="uid://dc8jk0k7uavf7" path="res://src/World/WorldGen/PlaneGen/world_objects.gd" id="5_77st1"]
+[ext_resource type="Script" uid="uid://dpkptl151ffxv" path="res://src/World/WorldGen/PlaneGen/navigation.gd" id="6_6ngtv"]
+[ext_resource type="Script" uid="uid://hkqypdvqt8d8" path="res://src/World/WorldGen/PlaneGen/np_cs.gd" id="7_g68k6"]
+
+[node name="WorldGen" type="Node3D" node_paths=PackedStringArray("player_character")]
+script = ExtResource("1_mflap")
+debug = true
+player_character = NodePath("Camera3D")
+
+[node name="Viewports" type="Node" parent="."]
+
+[node name="WorldSystems" type="Node3D" parent="."]
+
+[node name="World" type="StaticBody3D" parent="."]
+script = ExtResource("2_ivodg")
+
+[node name="GroundMeshes" type="Node3D" parent="."]
+script = ExtResource("3_edahp")
+
+[node name="WaterMeshes" type="Node3D" parent="."]
+script = ExtResource("4_2xqax")
+
+[node name="WorldObjects" type="Node3D" parent="."]
+script = ExtResource("5_77st1")
+
+[node name="Static" type="Node3D" parent="WorldObjects"]
+
+[node name="Physics" type="Node3D" parent="WorldObjects"]
+
+[node name="Interactive" type="Node3D" parent="WorldObjects"]
+
+[node name="Navigation" type="Node3D" parent="."]
+script = ExtResource("6_6ngtv")
+
+[node name="NPCs" type="Node3D" parent="."]
+script = ExtResource("7_g68k6")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 40, 0)

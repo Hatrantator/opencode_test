@@ -1,0 +1,99 @@
+[gd_scene format=3 uid="uid://1o6cff5paa20"]
+
+[ext_resource type="Script" uid="uid://0f1c1uhn7m0j" path="res://addons/gd_shader_lib/dock/include_browser_dock.gd" id="1_l26uf"]
+[ext_resource type="PackedScene" uid="uid://bma1yxr7wf08v" path="res://addons/gd_shader_lib/dock/shader_wizard.tscn" id="2_k1h4n"]
+
+[node name="IncludeBrowserDock" type="VBoxContainer" unique_id=1369443589]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_l26uf")
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1158931895]
+layout_mode = 2
+metadata/NewInclude = ""
+
+[node name="LineEdit" type="LineEdit" parent="HBoxContainer" unique_id=1456232349]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+text = "Search"
+
+[node name="NewBtn" type="Button" parent="HBoxContainer" unique_id=1673532331]
+layout_mode = 2
+text = "New Include"
+
+[node name="PopupMenu" type="PanelContainer" parent="." unique_id=881997745]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PopupMenu" unique_id=456812372]
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Inputs" type="VBoxContainer" parent="PopupMenu/ScrollContainer" unique_id=702950163]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CreateBtn" type="Button" parent="PopupMenu/ScrollContainer/Inputs" unique_id=139005136]
+layout_mode = 2
+text = "Create Include"
+
+[node name="Tree" type="Tree" parent="." unique_id=2081811025]
+layout_mode = 2
+size_flags_vertical = 3
+hide_root = true
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=724963993]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer" unique_id=1001603041]
+layout_mode = 2
+focus_mode = 2
+bbcode_enabled = true
+text = "Info / Docs"
+context_menu_enabled = true
+selection_enabled = true
+
+[node name="ShaderWizard" parent="." unique_id=1279875246 instance=ExtResource("2_k1h4n")]
+title = "Shader Wizard"
+ok_button_text = "Close"
+
+[node name="AcceptDialog" type="AcceptDialog" parent="." unique_id=860241584]
+oversampling_override = 1.0
+title = "Create new Include"
+size = Vector2i(528, 674)
+
+[node name="Inputs" type="VBoxContainer" parent="AcceptDialog" unique_id=1970985066]
+offset_left = 266.0
+offset_top = 8.0
+offset_right = 520.0
+offset_bottom = 625.0
+size_flags_horizontal = 3
+
+[node name="OptionButton" type="OptionButton" parent="AcceptDialog/Inputs" unique_id=270684156]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Spatial"
+popup/item_0/id = 0
+popup/item_1/text = "CanvasItem"
+popup/item_1/id = 1
+popup/item_2/text = "Compute"
+popup/item_2/id = 2
+
+[connection signal="pressed" from="HBoxContainer/NewBtn" to="." method="_on_new_btn_pressed"]
+[connection signal="pressed" from="PopupMenu/ScrollContainer/Inputs/CreateBtn" to="." method="_on_create_pressed"]
+[connection signal="column_title_clicked" from="Tree" to="." method="_on_tree_column_title_clicked"]
+[connection signal="gui_input" from="Tree" to="." method="_on_tree_gui_input"]
+[connection signal="item_activated" from="Tree" to="." method="_on_tree_item_activated"]
+[connection signal="item_selected" from="Tree" to="." method="_on_tree_item_selected"]
+[connection signal="confirmed" from="AcceptDialog" to="." method="_on_accept_dialog_confirmed"]
+[connection signal="item_selected" from="AcceptDialog/Inputs/OptionButton" to="." method="_on_option_button_item_selected"]
